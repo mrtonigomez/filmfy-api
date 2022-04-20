@@ -21,7 +21,7 @@ class CreateItemTable extends Migration
             $table->integer('runtime');
             $table->boolean('status');
             $table->string('trailer');
-            $table->integer('category_id');
+            $table->unsignedInteger('category_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 

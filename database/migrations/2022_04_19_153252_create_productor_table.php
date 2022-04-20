@@ -18,7 +18,7 @@ class CreateProductorTable extends Migration
             $table->string('name', 50);
             $table->timestamp('formdate');
             $table->boolean('status');
-            $table->integer('country_id');
+            $table->unsignedInteger('country_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
