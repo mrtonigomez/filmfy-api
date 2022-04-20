@@ -14,8 +14,8 @@ class CreateItemProductorTable extends Migration
     public function up()
     {
         Schema::create('item-productor', function (Blueprint $table) {
-            $table->integer('item_id');
-            $table->integer('productor_id');
+            $table->unsignedInteger('item_id');
+            $table->unsignedInteger('productor_id');
 
             $table->foreign('item_id')
                 ->references('id')

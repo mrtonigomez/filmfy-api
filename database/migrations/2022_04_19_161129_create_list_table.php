@@ -15,7 +15,7 @@ class CreateListTable extends Migration
     {
         Schema::create('list', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('users_id');
+            $table->unsignedInteger('users_id');
             $table->string('title', 75);
             $table->string('description', 750);
             $table->boolean('is_private');

@@ -15,7 +15,7 @@ class CreateMovieTable extends Migration
     {
         Schema::create('movie', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('item_id');
+            $table->unsignedInteger('item_id');
 
             $table->foreign('item_id')
                 ->references('id')

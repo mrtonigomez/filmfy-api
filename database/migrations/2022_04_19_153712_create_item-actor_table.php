@@ -14,8 +14,8 @@ class CreateItemActorTable extends Migration
     public function up()
     {
         Schema::create('item-actor', function (Blueprint $table) {
-            $table->integer('item_id');
-            $table->integer('actor_id');
+            $table->unsignedInteger('item_id');
+            $table->unsignedInteger('actor_id');
             $table->string('character_name', 50);
 
             $table->foreign('item_id')

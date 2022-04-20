@@ -15,8 +15,8 @@ class CreateItemListTable extends Migration
     {
         Schema::create('item-list', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('list_id');
-            $table->integer('item_id');
+            $table->unsignedInteger('list_id');
+            $table->unsignedInteger('item_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 

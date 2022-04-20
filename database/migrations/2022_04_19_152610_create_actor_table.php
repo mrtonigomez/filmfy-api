@@ -19,7 +19,7 @@ class CreateActorTable extends Migration
             $table->string('gender', 500);
             $table->timestamp('birthdate');
             $table->boolean('status');
-            $table->integer('country_id');
+            $table->unsignedInteger('country_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
