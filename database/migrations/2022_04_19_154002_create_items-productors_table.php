@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateChapterTable extends Migration
+class CreateItemsProductorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,17 @@ class CreateChapterTable extends Migration
      */
     public function up()
     {
-        Schema::create('chapter', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('item_id');
-            $table->integer('season_id');
+        Schema::create('items-productors', function (Blueprint $table) {
+            $table->unsignedBigInteger('item_id');
+            $table->unsignedBigInteger('productor_id');
 
             $table->foreign('item_id')
                 ->references('id')
-                ->on('item')
+                ->on('items')
                 ->onDelete('cascade');
-            $table->foreign('season_id')
+            $table->foreign('productor_id')
                 ->references('id')
-                ->on('season')
+                ->on('productors')
                 ->onDelete('cascade');
         });
     }
@@ -36,6 +35,6 @@ class CreateChapterTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('chapter');
+        Schema::dropIfExists('items-productors');
     }
 }

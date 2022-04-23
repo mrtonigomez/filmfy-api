@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSerieTable extends Migration
+class CreateMoviesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateSerieTable extends Migration
      */
     public function up()
     {
-        Schema::create('serie', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('item_id');
+        Schema::create('movies', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('item_id');
 
             $table->foreign('item_id')
                 ->references('id')
-                ->on('item')
+                ->on('items')
                 ->onDelete('cascade');
         });
     }
@@ -31,6 +31,6 @@ class CreateSerieTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('serie');
+        Schema::dropIfExists('movies');
     }
 }

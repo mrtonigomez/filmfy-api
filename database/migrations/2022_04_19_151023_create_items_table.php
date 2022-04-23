@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductorTable extends Migration
+class CreateItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,21 @@ class CreateProductorTable extends Migration
      */
     public function up()
     {
-        Schema::create('productor', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name', 50);
-            $table->timestamp('formdate');
+        Schema::create('items', function (Blueprint $table) {
+            $table->id();
+            $table->string('title', 50);
+            $table->string('description', 500);
+            $table->timestamp('release_date')->useCurrent();
+            $table->integer('runtime');
             $table->boolean('status');
-            $table->integer('country_id');
+            $table->string('trailer');
+            $table->unsignedBigInteger('category_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
-            $table->foreign('country_id')
+            $table->foreign('category_id')
                 ->references('id')
-                ->on('country')
+                ->on('categories')
                 ->onDelete('cascade');
         });
     }
@@ -36,6 +39,6 @@ class CreateProductorTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('productor');
+        Schema::dropIfExists('items');
     }
 }
