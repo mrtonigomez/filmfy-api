@@ -29,6 +29,14 @@ class Countries extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function actors() {
+        return $this->hasMany(Actors::class);
+    }
+
+    public function productors() {
+        return $this->hasMany(Productors::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

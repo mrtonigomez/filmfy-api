@@ -35,6 +35,14 @@ class Items extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function category() {
+        return $this->belongsTo(Categories::class);
+    }
+
+    public function actors() {
+        return $this->belongsToMany(Actors::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

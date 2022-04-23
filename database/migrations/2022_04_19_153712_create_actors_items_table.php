@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateItemsActorsTable extends Migration
+class CreateActorsItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class CreateItemsActorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('items-actors', function (Blueprint $table) {
-            $table->unsignedBigInteger('item_id');
-            $table->unsignedBigInteger('actor_id');
-            $table->string('character_name', 50);
+        Schema::create('actors_items', function (Blueprint $table) {
+            $table->unsignedBigInteger('items_id');
+            $table->unsignedBigInteger('actors_id');
+            $table->string('character_name', 50)->nullable();
 
-            $table->foreign('item_id')
+            $table->foreign('items_id')
                 ->references('id')
                 ->on('items')
                 ->onDelete('cascade');
-            $table->foreign('actor_id')
+            $table->foreign('actors_id')
                 ->references('id')
                 ->on('actors')
                 ->onDelete('cascade');
