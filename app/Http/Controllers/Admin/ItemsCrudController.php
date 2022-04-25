@@ -66,20 +66,19 @@ class ItemsCrudController extends CrudController
     {
         CRUD::setValidation(ItemsRequest::class);
 
-        CRUD::field('id');
-        CRUD::field('title');
-        CRUD::field('description');
-        CRUD::field('release_date');
-        CRUD::field('runtime');
-        CRUD::field('status');
-        CRUD::field('trailer');
-        CRUD::field('category_id');
-        CRUD::field('created_at');
-        CRUD::field('updated_at');
+        CRUD::field('title')->tab("Información básica");
+        CRUD::field('description')->tab("Información básica");
+        CRUD::field('release_date')->tab("Información básica");
+        CRUD::field('runtime')->tab("Información básica");
+        CRUD::field('status')->tab("Información básica");
+        CRUD::field('trailer')->tab("Información básica");
+        CRUD::field('category_id')->tab("Información básica");
+
         $this->crud->addField([
             'name' => 'actors',
             'label' => 'Actor',
             'type'  => 'select_multiple',
+            'tab'  => 'Personas involucradas',
 
             'attribute' => 'name', // foreign key attribute that is shown to user
             'model'     => "App\Models\Actors", // related model
@@ -91,6 +90,7 @@ class ItemsCrudController extends CrudController
             'name' => 'productors',
             'label' => 'Productor',
             'type'  => 'select_multiple',
+            'tab'  => 'Personas involucradas',
 
             'attribute' => 'name', // foreign key attribute that is shown to user
             'model'     => "App\Models\Productors", // related model

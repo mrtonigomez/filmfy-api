@@ -45,9 +45,9 @@ class ActorsCrudController extends CrudController
         CRUD::column('gender');
         CRUD::column('birthdate');
         CRUD::column('status');
+        CRUD::column('image');
         CRUD::column('country_id');
-        CRUD::column('created_at');
-        CRUD::column('updated_at');
+
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -66,14 +66,19 @@ class ActorsCrudController extends CrudController
     {
         CRUD::setValidation(ActorsRequest::class);
 
-        CRUD::field('id');
         CRUD::field('name');
         CRUD::field('gender');
         CRUD::field('birthdate');
         CRUD::field('status');
+        CRUD::field('image')->type("upload")->upload(true)->disk("storage");
         CRUD::field('country_id');
-        CRUD::field('created_at');
-        CRUD::field('updated_at');
+
+        $this->crud->addField([
+            'name' => 'country',
+            'label' => 'Country',
+            'type'  => 'select',
+
+        ]);
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

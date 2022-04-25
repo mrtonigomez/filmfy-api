@@ -18,6 +18,7 @@ class CreateProductorsTable extends Migration
             $table->string('name', 50);
             $table->timestamp('formdate');
             $table->boolean('status');
+            $table->string("image");
             $table->unsignedBigInteger('country_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();

@@ -35,6 +35,10 @@ class Documentaries extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function item() {
+        return $this->belongsTo(Items::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES
