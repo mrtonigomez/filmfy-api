@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\UsersRequest;
+use App\Http\Requests\ActorsRequest;
+use App\Models\Countries;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class UsersCrudController
+ * Class ActorsCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class UsersCrudController extends CrudController
+class ActorsCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -26,9 +27,9 @@ class UsersCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\User::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/users');
-        CRUD::setEntityNameStrings('users', 'users');
+        CRUD::setModel(\App\Models\Actors::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/actors');
+        CRUD::setEntityNameStrings('actors', 'actors');
     }
 
     /**
@@ -41,10 +42,10 @@ class UsersCrudController extends CrudController
     {
         CRUD::column('id');
         CRUD::column('name');
-        CRUD::column('email');
-        CRUD::column('email_verified_at');
-        CRUD::column('password');
-        CRUD::column('remember_token');
+        CRUD::column('gender');
+        CRUD::column('birthdate');
+        CRUD::column('status');
+        CRUD::column('country_id');
         CRUD::column('created_at');
         CRUD::column('updated_at');
 
@@ -63,14 +64,14 @@ class UsersCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(UsersRequest::class);
+        CRUD::setValidation(ActorsRequest::class);
 
         CRUD::field('id');
         CRUD::field('name');
-        CRUD::field('email');
-        CRUD::field('email_verified_at');
-        CRUD::field('password');
-        CRUD::field('remember_token');
+        CRUD::field('gender');
+        CRUD::field('birthdate');
+        CRUD::field('status');
+        CRUD::field('country_id');
         CRUD::field('created_at');
         CRUD::field('updated_at');
 

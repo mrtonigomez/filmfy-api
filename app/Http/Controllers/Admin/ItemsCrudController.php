@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\UsersRequest;
+use App\Http\Requests\ItemsRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class UsersCrudController
+ * Class ItemsCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class UsersCrudController extends CrudController
+class ItemsCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -26,9 +26,10 @@ class UsersCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\User::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/users');
-        CRUD::setEntityNameStrings('users', 'users');
+        CRUD::setModel(\App\Models\Items::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/items');
+        CRUD::setEntityNameStrings('items', 'items');
+
     }
 
     /**
@@ -40,13 +41,13 @@ class UsersCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::column('id');
-        CRUD::column('name');
-        CRUD::column('email');
-        CRUD::column('email_verified_at');
-        CRUD::column('password');
-        CRUD::column('remember_token');
-        CRUD::column('created_at');
-        CRUD::column('updated_at');
+        CRUD::column('title');
+        CRUD::column('description');
+        CRUD::column('release_date');
+        CRUD::column('runtime');
+        CRUD::column('status');
+        CRUD::column('trailer');
+        CRUD::column('category_id');
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -63,16 +64,39 @@ class UsersCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(UsersRequest::class);
+        CRUD::setValidation(ItemsRequest::class);
 
         CRUD::field('id');
-        CRUD::field('name');
-        CRUD::field('email');
-        CRUD::field('email_verified_at');
-        CRUD::field('password');
-        CRUD::field('remember_token');
+        CRUD::field('title');
+        CRUD::field('description');
+        CRUD::field('release_date');
+        CRUD::field('runtime');
+        CRUD::field('status');
+        CRUD::field('trailer');
+        CRUD::field('category_id');
         CRUD::field('created_at');
         CRUD::field('updated_at');
+        $this->crud->addField([
+            'name' => 'actors',
+            'label' => 'Actor',
+            'type'  => 'select_multiple',
+
+            'attribute' => 'name', // foreign key attribute that is shown to user
+            'model'     => "App\Models\Actors", // related model
+            'pivot'     => true,
+            'multiple' => true
+        ]);
+
+        $this->crud->addField([
+            'name' => 'productors',
+            'label' => 'Productor',
+            'type'  => 'select_multiple',
+
+            'attribute' => 'name', // foreign key attribute that is shown to user
+            'model'     => "App\Models\Productors", // related model
+            'pivot'     => true,
+            'multiple' => true
+        ]);
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
