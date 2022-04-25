@@ -35,6 +35,10 @@ class Ratings extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function comment(){
+        return $this->belongsTo(Comments::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

@@ -13,15 +13,15 @@ class CreateItemsProductorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('items-productors', function (Blueprint $table) {
-            $table->unsignedBigInteger('item_id');
-            $table->unsignedBigInteger('productor_id');
+        Schema::create('items_productors', function (Blueprint $table) {
+            $table->unsignedBigInteger('items_id');
+            $table->unsignedBigInteger('productors_id');
 
-            $table->foreign('item_id')
+            $table->foreign('items_id')
                 ->references('id')
                 ->on('items')
                 ->onDelete('cascade');
-            $table->foreign('productor_id')
+            $table->foreign('productors_id')
                 ->references('id')
                 ->on('productors')
                 ->onDelete('cascade');
@@ -35,6 +35,6 @@ class CreateItemsProductorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('items-productors');
+        Schema::dropIfExists('items_productors');
     }
 }

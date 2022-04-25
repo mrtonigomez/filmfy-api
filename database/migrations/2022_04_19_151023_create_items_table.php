@@ -17,7 +17,7 @@ class CreateItemsTable extends Migration
             $table->id();
             $table->string('title', 50);
             $table->string('description', 500);
-            $table->timestamp('release_date')->useCurrent();
+            $table->date('release_date')->useCurrent();
             $table->integer('runtime');
             $table->boolean('status');
             $table->string('trailer');

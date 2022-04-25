@@ -35,6 +35,14 @@ class Productors extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function country() {
+        return $this->belongsTo(Countries::class);
+    }
+
+    public function items() {
+        return $this->belongsToMany(Items::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

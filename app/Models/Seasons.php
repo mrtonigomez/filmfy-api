@@ -35,6 +35,14 @@ class Seasons extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function serie(){
+        $this->belongsTo(Series::class);
+    }
+
+    public function chapter(){
+        $this->hasMany(Chapters::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

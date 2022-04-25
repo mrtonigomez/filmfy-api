@@ -87,6 +87,17 @@ class ItemsCrudController extends CrudController
             'multiple' => true
         ]);
 
+        $this->crud->addField([
+            'name' => 'productors',
+            'label' => 'Productor',
+            'type'  => 'select_multiple',
+
+            'attribute' => 'name', // foreign key attribute that is shown to user
+            'model'     => "App\Models\Productors", // related model
+            'pivot'     => true,
+            'multiple' => true
+        ]);
+
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');

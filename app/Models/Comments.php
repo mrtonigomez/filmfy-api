@@ -35,6 +35,18 @@ class Comments extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function rating() {
+        return $this->hasMany(Ratings::class);
+    }
+
+    public function users() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function item() {
+        return $this->belongsTo(Items::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

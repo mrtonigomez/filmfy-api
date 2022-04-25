@@ -29,6 +29,14 @@ class Lists extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function users(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function item(){
+        return $this->belongsToMany(Items::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

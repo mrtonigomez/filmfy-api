@@ -43,6 +43,17 @@ class Items extends Model
         return $this->belongsToMany(Actors::class);
     }
 
+    public function productors() {
+        return $this->belongsToMany(Productors::class);
+    }
+
+    public function list(){
+        $this->belongsToMany(Lists::class);
+    }
+
+    public function comment(){
+        $this->hasMany(Comments::class);
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES
