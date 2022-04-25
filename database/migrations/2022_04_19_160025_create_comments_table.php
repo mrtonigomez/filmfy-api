@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCommentTable extends Migration
+class CreateCommentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateCommentTable extends Migration
      */
     public function up()
     {
-        Schema::create('comment', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('item_id');
-            $table->unsignedInteger('users_id');
+        Schema::create('comments', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('item_id');
+            $table->unsignedBigInteger('users_id');
             $table->string('title', 75);
             $table->string('body', 1000);
             $table->boolean('moderated');
@@ -27,7 +27,7 @@ class CreateCommentTable extends Migration
 
             $table->foreign('item_id')
                 ->references('id')
-                ->on('item')
+                ->on('items')
                 ->onDelete('cascade');
             $table->foreign('users_id')
                 ->references('id')
@@ -43,6 +43,6 @@ class CreateCommentTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comment');
+        Schema::dropIfExists('comments');
     }
 }

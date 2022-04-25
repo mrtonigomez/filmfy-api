@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateItemActorTable extends Migration
+class CreateSeriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,13 @@ class CreateItemActorTable extends Migration
      */
     public function up()
     {
-        Schema::create('item-actor', function (Blueprint $table) {
-            $table->unsignedInteger('item_id');
-            $table->unsignedInteger('actor_id');
-            $table->string('character_name', 50);
+        Schema::create('series', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('item_id');
 
             $table->foreign('item_id')
                 ->references('id')
-                ->on('item')
-                ->onDelete('cascade');
-            $table->foreign('actor_id')
-                ->references('id')
-                ->on('actor')
+                ->on('items')
                 ->onDelete('cascade');
         });
     }
@@ -36,6 +31,6 @@ class CreateItemActorTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('item-actor');
+        Schema::dropIfExists('series');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSeasonTable extends Migration
+class CreateSeasonsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,18 @@ class CreateSeasonTable extends Migration
      */
     public function up()
     {
-        Schema::create('season', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('item_id');
-            $table->unsignedInteger('serie_id');
+        Schema::create('seasons', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('serie_id');
+            $table->unsignedBigInteger('item_id');
 
             $table->foreign('serie_id')
                 ->references('id')
-                ->on('serie')
+                ->on('series')
                 ->onDelete('cascade');
             $table->foreign('item_id')
                 ->references('id')
-                ->on('item')
+                ->on('items')
                 ->onDelete('cascade');
         });
     }
@@ -36,6 +36,6 @@ class CreateSeasonTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('season');
+        Schema::dropIfExists('seasons');
     }
 }

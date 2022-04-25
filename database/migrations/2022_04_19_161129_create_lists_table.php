@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateItemTable extends Migration
+class CreateListsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,20 @@ class CreateItemTable extends Migration
      */
     public function up()
     {
-        Schema::create('item', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('title', 50);
-            $table->string('description', 500);
-            $table->timestamp('release_date')->useCurrent();
-            $table->integer('runtime');
+        Schema::create('lists', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('users_id');
+            $table->string('title', 75);
+            $table->string('description', 750);
+            $table->boolean('is_private');
             $table->boolean('status');
-            $table->string('trailer');
-            $table->unsignedInteger('category_id');
+            $table->integer('likes');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
-            $table->foreign('category_id')
+            $table->foreign('users_id')
                 ->references('id')
-                ->on('category')
+                ->on('users')
                 ->onDelete('cascade');
         });
     }
@@ -39,6 +38,6 @@ class CreateItemTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('item');
+        Schema::dropIfExists('lists');
     }
 }

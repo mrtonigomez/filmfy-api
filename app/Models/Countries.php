@@ -5,7 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class Users extends Model
+class Countries extends Model
 {
     use CrudTrait;
 
@@ -15,7 +15,7 @@ class Users extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'users';
+    protected $table = 'countries';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
@@ -28,6 +28,14 @@ class Users extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+
+    public function actors() {
+        return $this->hasMany(Actors::class);
+    }
+
+    public function productors() {
+        return $this->hasMany(Productors::class);
+    }
 
     /*
     |--------------------------------------------------------------------------

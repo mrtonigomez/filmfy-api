@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductorTable extends Migration
+class CreateActorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,19 @@ class CreateProductorTable extends Migration
      */
     public function up()
     {
-        Schema::create('productor', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('actors', function (Blueprint $table) {
+            $table->id();
             $table->string('name', 50);
-            $table->timestamp('formdate');
+            $table->string('gender', 500);
+            $table->timestamp('birthdate');
             $table->boolean('status');
-            $table->unsignedInteger('country_id');
+            $table->unsignedBigInteger('country_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
             $table->foreign('country_id')
                 ->references('id')
-                ->on('country')
+                ->on('countries')
                 ->onDelete('cascade');
         });
     }
@@ -36,6 +37,6 @@ class CreateProductorTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('productor');
+        Schema::dropIfExists('actors');
     }
 }
