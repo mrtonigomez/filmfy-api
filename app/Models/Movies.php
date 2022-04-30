@@ -35,8 +35,20 @@ class Movies extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function item() {
-        return $this->belongsTo(Items::class);
+    public function category() {
+        return $this->belongsToMany(Categories::class);
+    }
+
+    public function entities() {
+        return $this->belongsToMany(Entities::class);
+    }
+
+    public function list(){
+        return $this->belongsToMany(Lists::class);
+    }
+
+    public function comment(){
+        return $this->hasMany(Comments::class);
     }
 
     /*

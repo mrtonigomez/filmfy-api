@@ -40,39 +40,13 @@ class MoviesCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::setValidation(ItemsRequest::class);
-
-        CRUD::field('title')->tab("Información básica");
-        CRUD::field('description')->tab("Información básica");
-        CRUD::field('release_date')->tab("Información básica");
-        CRUD::field('runtime')->tab("Información básica");
-        CRUD::field('status')->tab("Información básica");
-        CRUD::field('trailer')->tab("Información básica");
-        CRUD::field('category_id')->tab("Información básica");
-
-        $this->crud->addField([
-            'name' => 'actors',
-            'label' => 'Actor',
-            'type'  => 'select_multiple',
-            'tab'  => 'Personas involucradas',
-
-            'attribute' => 'name', // foreign key attribute that is shown to user
-            'model'     => "App\Models\Actors", // related model
-            'pivot'     => true,
-            'multiple' => true
-        ]);
-
-        $this->crud->addField([
-            'name' => 'productors',
-            'label' => 'Productor',
-            'type'  => 'select_multiple',
-            'tab'  => 'Personas involucradas',
-
-            'attribute' => 'name', // foreign key attribute that is shown to user
-            'model'     => "App\Models\Productors", // related model
-            'pivot'     => true,
-            'multiple' => true
-        ]);
+        CRUD::column('title')->tab("Información básica");
+        CRUD::column('description')->tab("Información básica");
+        CRUD::column('release_date')->tab("Información básica");
+        CRUD::column('runtime')->tab("Información básica");
+        CRUD::column('status')->tab("Información básica");
+        CRUD::column('trailer')->tab("Información básica");
+        CRUD::column('category_id')->tab("Información básica");
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -91,18 +65,40 @@ class MoviesCrudController extends CrudController
     {
         CRUD::setValidation(MoviesRequest::class);
 
-        $this->crud->addField([
-            'name' => 'item',
-            'label' => 'Item',
-            'type'  => 'select',
+        CRUD::field('title')->tab("Información básica");
+        CRUD::field('description')->tab("Información básica");
+        CRUD::field('release_date')->tab("Información básica");
+        CRUD::field('runtime')->tab("Información básica");
+        CRUD::field('status')->tab("Información básica");
+        CRUD::field('trailer')->tab("Información básica");
+        CRUD::field('category_id')->tab("Información básica");
 
+        $this->crud->addField([
+            'name' => 'category',
+            'label' => 'Category',
+            'type' => 'select_multiple',
+            'tab' => 'Información básica',
+
+            'attribute' => 'name', // foreign key attribute that is shown to user
+            'model' => "App\Models\Categories", // related model
+            'pivot' => true,
+            'multiple' => true
         ]);
 
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
-         */
+        $this->crud->addField([
+            'name' => 'entities',
+            'label' => 'Actores',
+            'type' => 'select_multiple',
+            'tab' => 'Personas involucradas',
+
+            'attribute' => 'name', // foreign key attribute that is shown to user
+            'model' => "App\Models\Productors", // related model
+            'pivot' => true,
+            'multiple' => true,
+            'options' => (function ($query) {
+                return $query->where('depth', 1)->get();
+            }), //  you can use this to filter the results show in the select
+        ]);
     }
 
     /**

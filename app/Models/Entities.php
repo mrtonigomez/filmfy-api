@@ -5,7 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class Categories extends Model
+class Entities extends Model
 {
     use CrudTrait;
 
@@ -15,7 +15,7 @@ class Categories extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'categories';
+    protected $table = 'entities';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
@@ -35,8 +35,12 @@ class Categories extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function items() {
-        return $this->belongsToMany(Items::class);
+    public function roles(){
+        return $this->belongsToMany(Entities::class);
+    }
+
+    public function country() {
+        return $this->belongsTo(Countries::class);
     }
 
     /*
