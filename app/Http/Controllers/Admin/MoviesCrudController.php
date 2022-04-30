@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\ItemsRequest;
 use App\Http\Requests\MoviesRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -39,8 +40,39 @@ class MoviesCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('id');
-        CRUD::column('item_id');
+        CRUD::setValidation(ItemsRequest::class);
+
+        CRUD::field('title')->tab("Información básica");
+        CRUD::field('description')->tab("Información básica");
+        CRUD::field('release_date')->tab("Información básica");
+        CRUD::field('runtime')->tab("Información básica");
+        CRUD::field('status')->tab("Información básica");
+        CRUD::field('trailer')->tab("Información básica");
+        CRUD::field('category_id')->tab("Información básica");
+
+        $this->crud->addField([
+            'name' => 'actors',
+            'label' => 'Actor',
+            'type'  => 'select_multiple',
+            'tab'  => 'Personas involucradas',
+
+            'attribute' => 'name', // foreign key attribute that is shown to user
+            'model'     => "App\Models\Actors", // related model
+            'pivot'     => true,
+            'multiple' => true
+        ]);
+
+        $this->crud->addField([
+            'name' => 'productors',
+            'label' => 'Productor',
+            'type'  => 'select_multiple',
+            'tab'  => 'Personas involucradas',
+
+            'attribute' => 'name', // foreign key attribute that is shown to user
+            'model'     => "App\Models\Productors", // related model
+            'pivot'     => true,
+            'multiple' => true
+        ]);
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:

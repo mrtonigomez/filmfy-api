@@ -36,11 +36,11 @@ class Seasons extends Model
     */
 
     public function serie(){
-        $this->belongsTo(Series::class);
+        return $this->belongsTo(Series::class);
     }
 
     public function chapter(){
-        $this->hasMany(Chapters::class);
+        return $this->hasMany(Chapters::class);
     }
 
     /*

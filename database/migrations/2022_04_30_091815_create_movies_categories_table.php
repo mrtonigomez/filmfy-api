@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateItemsListsTable extends Migration
+class CreateMoviesCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,20 @@ class CreateItemsListsTable extends Migration
      */
     public function up()
     {
-        Schema::create('items-lists', function (Blueprint $table) {
+        Schema::create('movies_categories', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('list_id');
-            $table->unsignedBigInteger('item_id');
+            $table->unsignedBigInteger('categories_id');
+            $table->unsignedBigInteger('movies_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
-            $table->foreign('list_id')
+            $table->foreign('categories_id')
                 ->references('id')
-                ->on('lists')
+                ->on('categories')
                 ->onDelete('cascade');
-            $table->foreign('item_id')
+            $table->foreign('movies_id')
                 ->references('id')
-                ->on('items')
+                ->on('movies')
                 ->onDelete('cascade');
         });
     }
@@ -38,6 +38,6 @@ class CreateItemsListsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('items-lists');
+        Schema::dropIfExists('movies_categories');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductorsTable extends Migration
+class CreateMoviesListsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,20 @@ class CreateProductorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('productors', function (Blueprint $table) {
+        Schema::create('movies_lists', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 50);
-            $table->timestamp('formdate');
-            $table->boolean('status');
-            $table->string("image");
-            $table->unsignedBigInteger('country_id');
+            $table->unsignedBigInteger('lists_id');
+            $table->unsignedBigInteger('movies_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
-            $table->foreign('country_id')
+            $table->foreign('lists_id')
                 ->references('id')
-                ->on('countries')
+                ->on('lists')
+                ->onDelete('cascade');
+            $table->foreign('movies_id')
+                ->references('id')
+                ->on('movies')
                 ->onDelete('cascade');
         });
     }
@@ -37,6 +38,6 @@ class CreateProductorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('productors');
+        Schema::dropIfExists('items-lists');
     }
 }

@@ -36,7 +36,7 @@ class Chapters extends Model
     */
 
     public function season(){
-        $this->belongsTo(Seasons::class);
+        return $this->belongsTo(Seasons::class);
     }
 
     /*

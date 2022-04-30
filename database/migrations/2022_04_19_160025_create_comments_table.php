@@ -15,7 +15,7 @@ class CreateCommentsTable extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('item_id');
+            $table->unsignedBigInteger('movies_id');
             $table->unsignedBigInteger('users_id');
             $table->string('title', 75);
             $table->string('body', 1000);
@@ -25,9 +25,9 @@ class CreateCommentsTable extends Migration
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
-            $table->foreign('item_id')
+            $table->foreign('movies_id')
                 ->references('id')
-                ->on('items')
+                ->on('movies')
                 ->onDelete('cascade');
             $table->foreign('users_id')
                 ->references('id')

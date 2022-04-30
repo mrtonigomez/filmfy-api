@@ -15,12 +15,16 @@ class CreateMoviesTable extends Migration
     {
         Schema::create('movies', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('item_id');
-
-            $table->foreign('item_id')
-                ->references('id')
-                ->on('items')
-                ->onDelete('cascade');
+            $table->string('title', 50);
+            $table->string('description', 500);
+            $table->date('release_date')->useCurrent();
+            $table->string("image");
+            $table->integer('runtime');
+            $table->boolean('status');
+            $table->string('trailer');
+            $table->unsignedBigInteger('category_id');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
         });
     }
 
