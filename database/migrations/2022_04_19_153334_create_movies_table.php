@@ -22,7 +22,6 @@ class CreateMoviesTable extends Migration
             $table->integer('runtime');
             $table->boolean('status');
             $table->string('trailer');
-            $table->unsignedBigInteger('category_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });

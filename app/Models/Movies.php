@@ -19,7 +19,8 @@ class Movies extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    // protected $fillable = [];
+    protected $fillable = ['title', 'description', 'release_date', "image", 'runtime',
+        'status', 'trailer'];
     // protected $hidden = [];
     // protected $dates = [];
 
