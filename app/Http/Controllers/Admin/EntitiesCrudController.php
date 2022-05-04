@@ -74,6 +74,18 @@ class EntitiesCrudController extends CrudController
         CRUD::field('image');
         CRUD::field('country_id');
 
+        $this->crud->addField([
+            'name' => 'roles',
+            'label' => 'Role',
+            'type' => 'select_multiple',
+
+            'model' => "App\Models\Roles", // related model
+            'attribute' => 'type', // foreign key attribute that is shown to user
+            'pivot' => true,
+            'multiple' => true,
+
+        ]);
+
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');

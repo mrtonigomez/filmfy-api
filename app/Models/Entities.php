@@ -36,7 +36,11 @@ class Entities extends Model
     */
 
     public function roles(){
-        return $this->belongsToMany(Entities::class);
+        return $this->belongsToMany(Roles::class);
+    }
+
+    public function movies() {
+        return $this->belongsToMany(Movies::class);
     }
 
     public function country() {

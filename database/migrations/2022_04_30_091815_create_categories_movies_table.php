@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMoviesCategoriesTable extends Migration
+class CreateCategoriesMoviesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateMoviesCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('movies_categories', function (Blueprint $table) {
+        Schema::create('categories_movies', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('categories_id');
             $table->unsignedBigInteger('movies_id');
+            $table->unsignedBigInteger('categories_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
@@ -38,6 +38,6 @@ class CreateMoviesCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('movies_categories');
+        Schema::dropIfExists('categories_movies');
     }
 }
