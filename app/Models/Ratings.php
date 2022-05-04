@@ -19,7 +19,8 @@ class Ratings extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    // protected $fillable = [];
+    protected $fillable = ['comment_id', 'overall', 'argument', 'actors', 'image',
+        'sound', 'montage', 'effects'];
     // protected $hidden = [];
     // protected $dates = [];
 

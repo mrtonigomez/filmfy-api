@@ -19,7 +19,7 @@ class Countries extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    // protected $fillable = [];
+    protected $fillable = ['name', 'code'];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -29,12 +29,8 @@ class Countries extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function actors() {
-        return $this->hasMany(Actors::class);
-    }
-
-    public function productors() {
-        return $this->hasMany(Productors::class);
+    public function entities() {
+        return $this->hasMany(Entities::class);
     }
 
     /*

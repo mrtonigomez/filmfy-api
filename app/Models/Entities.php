@@ -5,7 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class Items extends Model
+class Entities extends Model
 {
     use CrudTrait;
 
@@ -15,11 +15,11 @@ class Items extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'items';
+    protected $table = 'entities';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    // protected $fillable = [];
+    protected $fillable = ['name', 'formdate', 'status', "image", 'country_id'];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -35,25 +35,18 @@ class Items extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function category() {
-        return $this->belongsTo(Categories::class);
+    public function roles(){
+        return $this->belongsToMany(Roles::class);
     }
 
-    public function actors() {
-        return $this->belongsToMany(Actors::class);
+    public function movies() {
+        return $this->belongsToMany(Movies::class);
     }
 
-    public function productors() {
-        return $this->belongsToMany(Productors::class);
+    public function country() {
+        return $this->belongsTo(Countries::class);
     }
 
-    public function list(){
-        $this->belongsToMany(Lists::class);
-    }
-
-    public function comment(){
-        $this->hasMany(Comments::class);
-    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES
@@ -71,4 +64,15 @@ class Items extends Model
     | MUTATORS
     |--------------------------------------------------------------------------
     */
+
+    public function setImageAttribute($value)
+    {
+        $attribute_name = "image";
+        $disk = "storage";
+        $destination_path = "images";
+
+        $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
+
+        // return $this->attributes[{$attribute_name}]; // uncomment if this is a translatable field
+    }
 }

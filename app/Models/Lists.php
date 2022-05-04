@@ -19,7 +19,8 @@ class Lists extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    // protected $fillable = [];
+    protected $fillable = ["users_id", 'title', 'description', 'is_private', 'status',
+        'likes'];
     // protected $hidden = [];
     // protected $dates = [];
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSeasonsTable extends Migration
+class CreateEntitiesMoviesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,20 @@ class CreateSeasonsTable extends Migration
      */
     public function up()
     {
-        Schema::create('seasons', function (Blueprint $table) {
+        Schema::create('entities_movies', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('serie_id');
-            $table->unsignedBigInteger('item_id');
+            $table->unsignedBigInteger('movies_id');
+            $table->unsignedBigInteger('entities_id');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
 
-            $table->foreign('serie_id')
+            $table->foreign('entities_id')
                 ->references('id')
-                ->on('series')
+                ->on('entities')
                 ->onDelete('cascade');
-            $table->foreign('item_id')
+            $table->foreign('movies_id')
                 ->references('id')
-                ->on('items')
+                ->on('movies')
                 ->onDelete('cascade');
         });
     }
@@ -36,6 +38,6 @@ class CreateSeasonsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('seasons');
+        Schema::dropIfExists('entities_movies');
     }
 }

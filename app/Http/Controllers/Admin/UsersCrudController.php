@@ -65,12 +65,10 @@ class UsersCrudController extends CrudController
     {
         CRUD::setValidation(UsersRequest::class);
 
-        CRUD::field('id');
         CRUD::field('name');
         CRUD::field('email');
         CRUD::field('email_verified_at');
         CRUD::field('password');
-        CRUD::field('remember_token');
         CRUD::field('created_at');
         CRUD::field('updated_at');
 

@@ -19,7 +19,8 @@ class Movies extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    // protected $fillable = [];
+    protected $fillable = ['title', 'description', 'release_date', "image", 'runtime',
+        'status', 'trailer'];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -34,6 +35,22 @@ class Movies extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+
+    public function category() {
+        return $this->belongsToMany(Categories::class);
+    }
+
+    public function entities() {
+        return $this->belongsToMany(Entities::class);
+    }
+
+    public function list(){
+        return $this->belongsToMany(Lists::class);
+    }
+
+    public function comment(){
+        return $this->hasMany(Comments::class);
+    }
 
     /*
     |--------------------------------------------------------------------------

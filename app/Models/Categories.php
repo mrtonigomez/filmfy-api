@@ -19,7 +19,7 @@ class Categories extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    // protected $fillable = [];
+    protected $fillable = ["name"];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -36,7 +36,7 @@ class Categories extends Model
     */
 
     public function items() {
-        return $this->hasMany(Items::class);
+        return $this->belongsToMany(Items::class);
     }
 
     /*

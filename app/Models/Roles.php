@@ -5,7 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class Seasons extends Model
+class Roles extends Model
 {
     use CrudTrait;
 
@@ -15,11 +15,11 @@ class Seasons extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'seasons';
+    protected $table = 'roles';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    // protected $fillable = [];
+    protected $fillable = ["type"];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -34,14 +34,6 @@ class Seasons extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-
-    public function serie(){
-        $this->belongsTo(Series::class);
-    }
-
-    public function chapter(){
-        $this->hasMany(Chapters::class);
-    }
 
     /*
     |--------------------------------------------------------------------------

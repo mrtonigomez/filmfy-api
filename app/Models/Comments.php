@@ -19,7 +19,8 @@ class Comments extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    // protected $fillable = [];
+    protected $fillable = ["movies_id", "users_id", 'title', 'body', 'moderated',
+        'status', 'likes'];
     // protected $hidden = [];
     // protected $dates = [];
 

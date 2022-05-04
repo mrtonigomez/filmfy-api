@@ -14,7 +14,6 @@ class CreateRatingsTable extends Migration
     public function up()
     {
         Schema::create('ratings', function (Blueprint $table) {
-            $table->id();
             $table->unsignedBigInteger('comment_id');
             $table->integer('overall');
             $table->integer('argument');
@@ -23,6 +22,7 @@ class CreateRatingsTable extends Migration
             $table->integer('sound');
             $table->integer('montage');
             $table->integer('effects');
+
 
 
             $table->foreign('comment_id')
