@@ -47,6 +47,10 @@ class Entities extends Model
         return $this->belongsTo(Countries::class);
     }
 
+    public function characters(){
+        return $this->hasMany(Characters::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

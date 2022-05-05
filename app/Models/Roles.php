@@ -35,6 +35,10 @@ class Roles extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function entities(){
+        return $this->belongsToMany(Entities::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

@@ -35,8 +35,8 @@ class Categories extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function items() {
-        return $this->belongsToMany(Items::class);
+    public function movies() {
+        return $this->belongsToMany(Movies::class);
     }
 
     /*

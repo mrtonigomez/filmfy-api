@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\EntitiesRequest;
-use App\Http\Requests\ItemsRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -40,7 +39,6 @@ class EntitiesCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::setValidation(ItemsRequest::class);
 
         CRUD::column('id');
         CRUD::column('name');

@@ -44,8 +44,8 @@ class Comments extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function item() {
-        return $this->belongsTo(Items::class);
+    public function movies() {
+        return $this->belongsTo(Movies::class);
     }
 
     /*

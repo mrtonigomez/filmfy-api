@@ -79,7 +79,15 @@ class MoviesCrudController extends CrudController
         CRUD::field('image')->tab("Información básica");
         CRUD::field('runtime')->tab("Información básica");
         CRUD::field('status')->tab("Información básica");
-        CRUD::field('trailer')->tab("Información básica");
+        CRUD::field('trailer')->tab("Información básica")->events([
+            'saving' => function ($entry) {
+                $data = [
+                    "movies_id" => $entry->id,
+                    "entities_id"
+                ];
+                DB::table("movies_entities_roles")->insert();
+            },
+        ]);;
 
         $this->crud->addField([
             'name' => 'category',
@@ -95,7 +103,7 @@ class MoviesCrudController extends CrudController
 
         $this->crud->addField([
             'name' => 'entities',
-            'label' => 'Actores',
+            'label' => 'Entidades',
             'type' => 'select_multiple',
             'tab' => 'Personas involucradas',
 

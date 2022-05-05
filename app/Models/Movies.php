@@ -52,6 +52,10 @@ class Movies extends Model
         return $this->hasMany(Comments::class);
     }
 
+    public function characters(){
+        return $this->hasMany(Characters::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

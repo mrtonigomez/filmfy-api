@@ -9,3 +9,5 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('countries') }}'><i class='nav-icon la la-flag'></i> Countries</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('comments') }}'><i class='nav-icon la la-comment'></i> Comments</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('ratings') }}'><i class='nav-icon la la-star'></i> Ratings</a></li>
+
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('characters') }}'><i class='nav-icon la la-question'></i> Characters</a></li>
