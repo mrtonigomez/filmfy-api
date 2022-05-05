@@ -15,8 +15,8 @@ class CreateEntitiesMoviesTable extends Migration
     {
         Schema::create('entities_movies', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('movies_id');
-            $table->unsignedBigInteger('entities_id');
+            $table->unsignedInteger('movies_id');
+            $table->unsignedInteger('entities_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 

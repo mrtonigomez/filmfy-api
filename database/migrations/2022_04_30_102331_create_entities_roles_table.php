@@ -15,8 +15,8 @@ class CreateEntitiesRolesTable extends Migration
     {
         Schema::create('entities_roles', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('entities_id');
-            $table->unsignedBigInteger('roles_id');
+            $table->unsignedInteger('entities_id');
+            $table->unsignedInteger('roles_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 

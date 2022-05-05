@@ -15,8 +15,8 @@ class CreateMoviesListsTable extends Migration
     {
         Schema::create('movies_lists', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('lists_id');
-            $table->unsignedBigInteger('movies_id');
+            $table->unsignedInteger('lists_id');
+            $table->unsignedInteger('movies_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 

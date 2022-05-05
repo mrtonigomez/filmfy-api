@@ -19,7 +19,7 @@ class CreateEntitiesTable extends Migration
             $table->date('formdate');
             $table->boolean('status');
             $table->string("image");
-            $table->unsignedBigInteger('country_id');
+            $table->unsignedInteger('country_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 

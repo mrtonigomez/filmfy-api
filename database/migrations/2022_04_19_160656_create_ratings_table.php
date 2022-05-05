@@ -14,7 +14,7 @@ class CreateRatingsTable extends Migration
     public function up()
     {
         Schema::create('ratings', function (Blueprint $table) {
-            $table->unsignedBigInteger('comment_id');
+            $table->unsignedInteger('comment_id');
             $table->integer('overall');
             $table->integer('argument');
             $table->integer('actors');
