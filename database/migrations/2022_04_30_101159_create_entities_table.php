@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateItemTable extends Migration
+class CreateEntitiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,19 @@ class CreateItemTable extends Migration
      */
     public function up()
     {
-        Schema::create('item', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('title', 50);
-            $table->string('description', 500);
-            $table->timestamp('release_date')->useCurrent();
-            $table->integer('runtime');
+        Schema::create('entities', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 50);
+            $table->date('formdate');
             $table->boolean('status');
-            $table->string('trailer');
-            $table->unsignedInteger('category_id');
+            $table->string("image");
+            $table->unsignedBigInteger('country_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
-            $table->foreign('category_id')
+            $table->foreign('country_id')
                 ->references('id')
-                ->on('category')
+                ->on('countries')
                 ->onDelete('cascade');
         });
     }
@@ -39,6 +37,6 @@ class CreateItemTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('item');
+        Schema::dropIfExists('entities');
     }
 }

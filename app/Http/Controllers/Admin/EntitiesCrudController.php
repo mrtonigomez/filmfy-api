@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\UsersRequest;
+use App\Http\Requests\EntitiesRequest;
+use App\Http\Requests\ItemsRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class UsersCrudController
+ * Class EntitiesCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class UsersCrudController extends CrudController
+class EntitiesCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -26,9 +27,9 @@ class UsersCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\User::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/users');
-        CRUD::setEntityNameStrings('users', 'users');
+        CRUD::setModel(\App\Models\Entities::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/entities');
+        CRUD::setEntityNameStrings('entities', 'entities');
     }
 
     /**
@@ -39,12 +40,14 @@ class UsersCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        CRUD::setValidation(ItemsRequest::class);
+
         CRUD::column('id');
         CRUD::column('name');
-        CRUD::column('email');
-        CRUD::column('email_verified_at');
-        CRUD::column('password');
-        CRUD::column('remember_token');
+        CRUD::column('formdate');
+        CRUD::column('status');
+        CRUD::column('image');
+        CRUD::column('country_id');
         CRUD::column('created_at');
         CRUD::column('updated_at');
 
@@ -63,14 +66,25 @@ class UsersCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(UsersRequest::class);
+        CRUD::setValidation(EntitiesRequest::class);
 
         CRUD::field('name');
-        CRUD::field('email');
-        CRUD::field('email_verified_at');
-        CRUD::field('password');
-        CRUD::field('created_at');
-        CRUD::field('updated_at');
+        CRUD::field('formdate');
+        CRUD::field('status');
+        CRUD::field('image');
+        CRUD::field('country_id');
+
+        $this->crud->addField([
+            'name' => 'roles',
+            'label' => 'Role',
+            'type' => 'select_multiple',
+
+            'model' => "App\Models\Roles", // related model
+            'attribute' => 'type', // foreign key attribute that is shown to user
+            'pivot' => true,
+            'multiple' => true,
+
+        ]);
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

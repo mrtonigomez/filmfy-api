@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\UsersRequest;
+use App\Http\Requests\CountriesRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class UsersCrudController
+ * Class CountriesCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class UsersCrudController extends CrudController
+class CountriesCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -26,9 +26,9 @@ class UsersCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\User::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/users');
-        CRUD::setEntityNameStrings('users', 'users');
+        CRUD::setModel(\App\Models\Countries::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/countries');
+        CRUD::setEntityNameStrings('countries', 'countries');
     }
 
     /**
@@ -40,11 +40,8 @@ class UsersCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::column('id');
+        CRUD::column('code');
         CRUD::column('name');
-        CRUD::column('email');
-        CRUD::column('email_verified_at');
-        CRUD::column('password');
-        CRUD::column('remember_token');
         CRUD::column('created_at');
         CRUD::column('updated_at');
 
@@ -63,14 +60,11 @@ class UsersCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(UsersRequest::class);
+        CRUD::setValidation(CountriesRequest::class);
 
         CRUD::field('name');
-        CRUD::field('email');
-        CRUD::field('email_verified_at');
-        CRUD::field('password');
-        CRUD::field('created_at');
-        CRUD::field('updated_at');
+        CRUD::field('code')->type("text");
+
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
