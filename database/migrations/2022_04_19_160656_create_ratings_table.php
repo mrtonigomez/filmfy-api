@@ -24,7 +24,6 @@ class CreateRatingsTable extends Migration
             $table->integer('effects');
 
 
-
             $table->foreign('comment_id')
                 ->references('id')
                 ->on('comments')

@@ -14,7 +14,7 @@ class CreateEntitiesRolesTable extends Migration
     public function up()
     {
         Schema::create('entities_roles', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->unsignedInteger('entities_id');
             $table->unsignedInteger('roles_id');
             $table->timestamp('created_at')->useCurrent();

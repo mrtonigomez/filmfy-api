@@ -14,7 +14,7 @@ class CreateListsTable extends Migration
     public function up()
     {
         Schema::create('lists', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->unsignedInteger('users_id');
             $table->string('title', 75);
             $table->string('description', 750);
