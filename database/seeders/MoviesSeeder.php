@@ -28,6 +28,13 @@ class MoviesSeeder extends Seeder
                 Movies::create([
                     // Data at current CSV
                     // Title,release_date,runtime,genre/s,description,image,trailer,actors,director,writers
+                    "title" => $data['0'],
+                    "description" => $data['4'],
+                    "release_date" => $data['1'],
+                    "image" => $data['5'],
+                    "runtime" => $data['2'],
+                    "status" => 1,
+                    "trailer" => $data['6']
                 ]);
             }
             $firstline = false;
