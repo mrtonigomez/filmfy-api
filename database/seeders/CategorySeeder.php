@@ -15,30 +15,31 @@ class CategorySeeder extends Seeder
     public function run()
     {
         $categories = [
-            ['name' => 'Acción'],
-            ['name' => 'Animación'],
-            ['name' => 'Arte'],
-            ['name' => 'Aventura'],
-            ['name' => 'Bélico'],
-            ['name' => 'Biográfico'],
-            ['name' => 'Ciencia Ficción'],
-            ['name' => 'Comedia'],
-            ['name' => 'Crimen'],
-            ['name' => 'Deportivo'],
-            ['name' => 'Drama'],
-            ['name' => 'Fantasía'],
-            ['name' => 'Histórico'],
-            ['name' => 'Independiente'],
-            ['name' => 'Infantil'],
-            ['name' => 'Melodrama'],
-            ['name' => 'Musical'],
-            ['name' => 'Policíaco'],
-            ['name' => 'Religioso'],
             ['name' => 'Suspense'],
+            ['name' => 'Acción'],
             ['name' => 'Terror'],
+            ['name' => 'Aventura'],
+            ['name' => 'Drama'],
+            ['name' => 'Crimen'],
+            ['name' => 'Épico'],
+            ['name' => 'Fantasía'],
+            ['name' => 'Animación'],
+            ['name' => 'Comedia dramática'],
+            ['name' => 'Romántico'],
+            ['name' => 'Ciencia ficción'],
+            ['name' => 'Biografía'],
+            ['name' => 'Comedia'],
+            ['name' => 'Comedia musical'],
             ['name' => 'Western'],
+            ['name' => 'Histórico'],
+            ['name' => 'Guerra'],
+            ['name' => 'Familia'],
+            ['name' => 'Judicial'],
+            ['name' => 'Bollywood'],
+            ['name' => 'Musical'],
+            ['name' => 'Espionaje'],
         ];
 
-        DB::table('category')->insert($categories);
+        DB::table('categories')->insert($categories);
     }
 }
