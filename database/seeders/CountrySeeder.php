@@ -270,6 +270,6 @@ class CountrySeeder extends Seeder
             ['name' => 'Zimbabue', 'code' => 'ZW'],
         ];
 
-        DB::table('country')->insert($countries);
+        DB::table('countries')->insert($countries);
     }
 }
