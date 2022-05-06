@@ -28,7 +28,7 @@ class MoviesSeeder extends Seeder
                 $new_movie = Movies::create([
                     /**
                      * Data at CSV:
-                     * Title,release_date,runtime,genre/s,categories_id,description,image,trailer,actors,director,writers
+                     * Title, release_date, runtime, genre/s, categories_id, description, image, trailer, actors, director, writers
                     **/
                     "title" => $data['0'],
                     "description" => $data['5'],
@@ -52,7 +52,6 @@ class MoviesSeeder extends Seeder
             }
             $firstline = false;
         }
-
         fclose($csvFile);
 
         Schema::enableForeignKeyConstraints();
