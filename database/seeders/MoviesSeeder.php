@@ -19,7 +19,7 @@ class MoviesSeeder extends Seeder
         Schema::disableForeignKeyConstraints();
 
         // Opening CSV
-        $csvFile = fopen(base_path("database/seeders/top-movies-data.csv"), "r");
+        $csvFile = fopen(base_path("database/resources/top-movies-data.csv"), "r");
 
         // Ignoring first line and creating all movies first
         $firstline = true;
