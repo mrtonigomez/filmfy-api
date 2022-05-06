@@ -55,6 +55,5 @@ class MoviesSeeder extends Seeder
         fclose($csvFile);
 
         Schema::enableForeignKeyConstraints();
-
     }
 }
