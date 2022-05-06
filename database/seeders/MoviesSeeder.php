@@ -18,14 +18,18 @@ class MoviesSeeder extends Seeder
     {
         Schema::disableForeignKeyConstraints();
 
+        // Opening CSV
         $csvFile = fopen(base_path("database/seeders/top-movies-data.csv"), "r");
 
+        // Ignoring first line and creating all movies first
         $firstline = true;
         while (($data = fgetcsv($csvFile, 0, ",")) !== FALSE) {
             if (!$firstline) {
                 $new_movie = Movies::create([
-                    // Data at current CSV
-                    // Title,release_date,runtime,genre/s,categories_id,description,image,trailer,actors,director,writers
+                    /**
+                     * Data at CSV:
+                     * Title,release_date,runtime,genre/s,categories_id,description,image,trailer,actors,director,writers
+                    **/
                     "title" => $data['0'],
                     "description" => $data['5'],
                     "release_date" => date($data['1']),
@@ -34,9 +38,11 @@ class MoviesSeeder extends Seeder
                     "status" => 1,
                     "trailer" => $data['7']
                 ]);
-                $new_movie->save();
-                $categories_array = explode(',', $data['4']);
+                $new_movie->save(); // Saving created item
 
+                $categories_array = explode(',', $data['4']); // Convert to array category id's
+
+                // Loop so seed categories_movies table with id of item created and categories_id at the array
                 foreach ($categories_array as $category) {
                     DB::table('categories_movies')->insert([
                         "movies_id" => $new_movie->id,
