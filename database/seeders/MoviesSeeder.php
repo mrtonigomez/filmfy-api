@@ -21,13 +21,13 @@ class MoviesSeeder extends Seeder
         $csvFile = fopen(base_path("database/seeders/movies.csv"), "r");
 
         $firstline = true;
-        while ($data = fgetcsv($csvFile, 0, ",") !== FALSE) {
+        while (($data = fgetcsv($csvFile, 0, ",")) !== FALSE) {
             if (!$firstline) {
-                print_r($data);
+                dump($data);
                 Movies::create([
                     // Data at current CSV
                     // Title,release_date,runtime,genre/s,description,image,trailer,actors,director,writers
-                    "title" => $data['Title'],
+                    "title" => $data['0'],
                     "description" => $data['4'],
                     "release_date" => $data['1'],
                     "image" => $data['5'],
