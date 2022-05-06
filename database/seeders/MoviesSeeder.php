@@ -17,18 +17,17 @@ class MoviesSeeder extends Seeder
     public function run()
     {
         Schema::disableForeignKeyConstraints();
-        DB::table('movies')->truncate();
-        Schema::enableForeignKeyConstraints();
 
         $csvFile = fopen(base_path("database/seeders/movies.csv"), "r");
-        $firstline = true;
 
+        $firstline = true;
         while ($data = fgetcsv($csvFile, 0, ",") !== FALSE) {
             if (!$firstline) {
+                print_r($data);
                 Movies::create([
                     // Data at current CSV
                     // Title,release_date,runtime,genre/s,description,image,trailer,actors,director,writers
-                    "title" => $data['0'],
+                    "title" => $data['Title'],
                     "description" => $data['4'],
                     "release_date" => $data['1'],
                     "image" => $data['5'],
@@ -41,5 +40,8 @@ class MoviesSeeder extends Seeder
         }
 
         fclose($csvFile);
+
+        Schema::enableForeignKeyConstraints();
+
     }
 }

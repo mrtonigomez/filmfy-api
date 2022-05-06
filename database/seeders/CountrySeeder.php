@@ -16,7 +16,6 @@ class CountrySeeder extends Seeder
     public function run()
     {
         Schema::disableForeignKeyConstraints();
-        DB::table('countries')->truncate();
         Schema::enableForeignKeyConstraints();
 
         $countries = [
