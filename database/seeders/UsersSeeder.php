@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -36,7 +37,13 @@ class UsersSeeder extends Seeder
             ],
         ];
 
-        DB::table('users')->insert($users);
+        foreach ($users as $user) {
+            User::create([
+                "name" => $user['name'],
+                "email" => $user['email'],
+                "password" => $user['password'],
+            ]);
+        }
 
         Schema::enableForeignKeyConstraints();
     }
