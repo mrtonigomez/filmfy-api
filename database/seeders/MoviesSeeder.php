@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Entities;
 use App\Models\Movies;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,33 @@ class MoviesSeeder extends Seeder
     {
         Schema::disableForeignKeyConstraints();
 
-        // Opening CSV
+        /** Function to store entities, roles and associated movies from CSV file
+         * @param $entities_array
+         * @param $role
+         * @param $movie_id
+         * @return void
+         */
+        function entities_seed($entities_array, $role, $movie_id) {
+            foreach ($entities_array as $entity) {
+                $result = Entities::where('name', '=', $entity,)->where('roles_id', '=', $role)->get();
+                if ($result->isEmpty()) {
+                    $new_entity = Entities::create([
+                        'name' => $entity,
+                        'roles_id' => $role,
+                    ]);
+                    $new_entity->save();
+
+                    DB::table('entities_movies')->insert([
+                        "entities_id" => $new_entity->id,
+                        "movies_id" => $movie_id,
+                    ]);
+                }
+            }
+        }
+
+        /** Opening CSV data
+         * Title, release_date, runtime, genre/s, categories_id, description, image, trailer, actors, director, writers
+         */
         $csvFile = fopen(base_path("database/resources/top-movies-data.csv"), "r");
 
         // Ignoring first line and creating all movies first
@@ -26,10 +53,6 @@ class MoviesSeeder extends Seeder
         while (($data = fgetcsv($csvFile, 0, ",")) !== FALSE) {
             if (!$firstline) {
                 $new_movie = Movies::create([
-                    /**
-                     * Data at CSV:
-                     * Title, release_date, runtime, genre/s, categories_id, description, image, trailer, actors, director, writers
-                    **/
                     "title" => $data['0'],
                     "description" => $data['5'],
                     "release_date" => date($data['1']),
@@ -40,6 +63,7 @@ class MoviesSeeder extends Seeder
                 ]);
                 $new_movie->save(); // Saving created item
 
+                // After creating movies, checking categories at the CSV
                 $categories_array = explode(',', $data['4']); // Convert to array category id's
 
                 // Loop so seed categories_movies table with id of item created and categories_id at the array
@@ -49,6 +73,17 @@ class MoviesSeeder extends Seeder
                         "categories_id" => $category,
                     ]);
                 }
+
+                // Reading data of entities of each movie (actors, directors, writers)
+                $actors_array = explode(',', $data['8']);
+                $directors_array = explode(',', $data['9']);
+                $writers_array = explode(',', $data['10']);
+
+                // Using function to seed passing role and added movie "id"
+                entities_seed($actors_array,1, $new_movie->id);
+                entities_seed($directors_array,2, $new_movie->id);
+                entities_seed($writers_array,3, $new_movie->id);
+
             }
             $firstline = false;
         }
