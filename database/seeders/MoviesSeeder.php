@@ -27,18 +27,20 @@ class MoviesSeeder extends Seeder
          */
         function entities_seed($entities_array, $role, $movie_id) {
             foreach ($entities_array as $entity) {
-                $result = Entities::where('name', '=', $entity,)->where('roles_id', '=', $role)->get();
-                if ($result->isEmpty()) {
-                    $new_entity = Entities::create([
-                        'name' => $entity,
-                        'roles_id' => $role,
-                    ]);
-                    $new_entity->save();
+                if ($entity !== '') {
+                    $result = Entities::where('name', '=', $entity,)->where('roles_id', '=', $role)->get();
+                    if ($result->isEmpty()) {
+                        $new_entity = Entities::create([
+                            'name' => $entity,
+                            'roles_id' => $role,
+                        ]);
+                        $new_entity->save();
 
-                    DB::table('entities_movies')->insert([
-                        "entities_id" => $new_entity->id,
-                        "movies_id" => $movie_id,
-                    ]);
+                        DB::table('entities_movies')->insert([
+                            "entities_id" => $new_entity->id,
+                            "movies_id" => $movie_id,
+                        ]);
+                    }
                 }
             }
         }
