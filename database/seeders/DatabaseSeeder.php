@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call(MoviesSeeder::class);
         $this->call(UsersSeeder::class);
         $this->call(ListsSeeder::class);
+        $this->call(RolesSeeder::class);
     }
 }
