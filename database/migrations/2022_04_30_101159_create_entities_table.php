@@ -16,16 +16,21 @@ class CreateEntitiesTable extends Migration
         Schema::create('entities', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->date('formdate');
-            $table->boolean('status');
-            $table->string("image");
-            $table->unsignedInteger('country_id');
+            $table->date('formdate')->nullable();
+            $table->unsignedInteger('roles_id');
+            $table->boolean('status')->default(1);
+            $table->string("image")->nullable();
+            $table->unsignedInteger('country_id')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
             $table->foreign('country_id')
                 ->references('id')
                 ->on('countries')
+                ->onDelete('cascade');
+            $table->foreign('roles_id')
+                ->references('id')
+                ->on('roles')
                 ->onDelete('cascade');
         });
     }
