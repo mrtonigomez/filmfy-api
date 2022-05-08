@@ -19,7 +19,7 @@ class Entities extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    protected $fillable = ['name', 'formdate', 'status', "image", 'country_id'];
+    protected $fillable = ['name', 'formdate', 'roles_id', 'status', "image", 'country_id'];
     // protected $hidden = [];
     // protected $dates = [];
 

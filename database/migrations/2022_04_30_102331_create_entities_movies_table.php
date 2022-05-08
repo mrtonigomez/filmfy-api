@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEntitiesRolesTable extends Migration
+class CreateEntitiesMoviesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateEntitiesRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('entities_roles', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('entities_id');
-            $table->unsignedBigInteger('roles_id');
+        Schema::create('entities_movies', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('entities_id');
+            $table->unsignedInteger('movies_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
@@ -24,9 +24,9 @@ class CreateEntitiesRolesTable extends Migration
                 ->references('id')
                 ->on('entities')
                 ->onDelete('cascade');
-            $table->foreign('roles_id')
+            $table->foreign('movies_id')
                 ->references('id')
-                ->on('roles')
+                ->on('movies')
                 ->onDelete('cascade');
         });
     }
@@ -38,6 +38,6 @@ class CreateEntitiesRolesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('entities_roles');
+        Schema::dropIfExists('entities_movies');
     }
 }

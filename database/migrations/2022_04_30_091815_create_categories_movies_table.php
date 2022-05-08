@@ -14,9 +14,9 @@ class CreateCategoriesMoviesTable extends Migration
     public function up()
     {
         Schema::create('categories_movies', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('movies_id');
-            $table->unsignedBigInteger('categories_id');
+            $table->increments('id');
+            $table->unsignedInteger('movies_id');
+            $table->unsignedInteger('categories_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
