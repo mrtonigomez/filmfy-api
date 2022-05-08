@@ -21,7 +21,7 @@ class CommentsCrudController extends CrudController
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
@@ -33,14 +33,14 @@ class CommentsCrudController extends CrudController
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
     protected function setupListOperation()
     {
         CRUD::column('id');
-        CRUD::column('item_id');
+        CRUD::column('movies_id');
         CRUD::column('users_id');
         CRUD::column('title');
         CRUD::column('body');
@@ -53,13 +53,13 @@ class CommentsCrudController extends CrudController
         /**
          * Columns can be defined using the fluent syntax or array syntax:
          * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
+         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']);
          */
     }
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
@@ -67,27 +67,52 @@ class CommentsCrudController extends CrudController
     {
         CRUD::setValidation(CommentsRequest::class);
 
-        CRUD::field('id');
-        CRUD::field('item_id');
-        CRUD::field('users_id');
+        $this->crud->addField([
+            'name' => 'users',
+            'label' => 'Users',
+            'type' => 'select',
+
+            'model' => "App\Models\User", // related model
+            'attribute' => 'name', // foreign key attribute that is shown to user
+            'options'   => (function ($query) {
+                return $query->orderBy('name', 'ASC')->get();
+            })
+
+        ]);
+        $this->crud->addField([
+            'name' => 'movies',
+            'label' => 'Movies',
+            'type' => 'select',
+
+            'model' => "App\Models\Movies", // related model
+            'attribute' => 'title', // foreign key attribute that is shown to user
+            'options'   => (function ($query) {
+                return $query->orderBy('title', 'ASC')->get();
+            })
+
+        ]);
         CRUD::field('title');
-        CRUD::field('body');
+        $this->crud->addField([
+            'name' => 'body',
+            'label' => 'Body',
+
+            'type' => 'summernote', // foreign key attribute that is shown to user
+
+        ]);
         CRUD::field('moderated');
         CRUD::field('status');
         CRUD::field('likes');
-        CRUD::field('created_at');
-        CRUD::field('updated_at');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
+         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
          */
     }
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */

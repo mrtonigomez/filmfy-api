@@ -41,7 +41,7 @@ class RolesCrudController extends CrudController
     {
 
         CRUD::column('id');
-        CRUD::column('type');
+        CRUD::column('name');
         CRUD::column('created_at');
         CRUD::column('updated_at');
 
@@ -62,7 +62,7 @@ class RolesCrudController extends CrudController
     {
         CRUD::setValidation(RolesRequest::class);
 
-        CRUD::field('type');
+        CRUD::field('name');
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');

@@ -74,21 +74,14 @@ class MoviesCrudController extends CrudController
     {
         CRUD::setValidation(MoviesRequest::class);
 
+
         CRUD::field('title')->tab("Información básica");
         CRUD::field('description')->tab("Información básica");
         CRUD::field('release_date')->tab("Información básica");
         CRUD::field('image')->tab("Información básica");
         CRUD::field('runtime')->tab("Información básica");
         CRUD::field('status')->tab("Información básica");
-        CRUD::field('trailer')->tab("Información básica")->events([
-            'saving' => function ($entry) {
-                $data = [
-                    "movies_id" => $entry->id,
-                    "entities_id"
-                ];
-                DB::table("movies_entities_roles")->insert();
-            },
-        ]);;
+        CRUD::field('trailer')->tab("Información básica");
 
         $this->crud->addField([
             'name' => 'category',
@@ -98,20 +91,31 @@ class MoviesCrudController extends CrudController
 
             'model' => 'App\Models\Categories',
             'attribute' => 'name', // foreign key attribute that is shown to user
+            'attributes' => [
+              'class' => 'form-select',
+              'multiple' => 'multiple'
+            ],
             'pivot' => true,
             'multiple' => true,
         ]);
 
         $this->crud->addField([
             'name' => 'entities',
-            'label' => 'Entidades',
+            'label' => 'Directores',
             'type' => 'select_multiple',
             'tab' => 'Personas involucradas',
+            'attributes' => [
+                'class' => 'form-control form-select',
+                'multiple' => 'multiple'
+            ],
 
             'model' => 'App\Models\Entities',
             'attribute' => 'name', // foreign key attribute that is shown to user
             'pivot' => true,
             'multiple' => true,
+            'options'   => (function ($query) {
+                return $query->orderBy('name', 'ASC')->get();
+            }), //  you can use this to filter the results show in the select
         ]);
 
     }

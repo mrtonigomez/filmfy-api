@@ -20,7 +20,7 @@ class Movies extends Model
     // public $timestamps = false;
     protected $guarded = ['id'];
     protected $fillable = ['title', 'description', 'release_date', "image", 'runtime',
-        'status', 'trailer'];
+        'trailer', 'status'];
     // protected $hidden = [];
     // protected $dates = [];
 

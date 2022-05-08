@@ -34,8 +34,8 @@ class Lists extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function item(){
-        return $this->belongsToMany(Items::class);
+    public function movies(){
+        return $this->belongsToMany(Movies::class);
     }
 
     /*

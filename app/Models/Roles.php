@@ -36,7 +36,7 @@ class Roles extends Model
     */
 
     public function entities(){
-        return $this->belongsToMany(Entities::class);
+        return $this->hasMany(Entities::class);
     }
 
     /*

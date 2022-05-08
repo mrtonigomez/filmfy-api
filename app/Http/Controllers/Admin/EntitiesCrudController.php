@@ -46,6 +46,7 @@ class EntitiesCrudController extends CrudController
         CRUD::column('status');
         CRUD::column('image');
         CRUD::column('country_id');
+        CRUD::column('roles');
         CRUD::column('created_at');
         CRUD::column('updated_at');
 
@@ -75,12 +76,10 @@ class EntitiesCrudController extends CrudController
         $this->crud->addField([
             'name' => 'roles',
             'label' => 'Role',
-            'type' => 'select_multiple',
+            'type' => 'select',
 
             'model' => "App\Models\Roles", // related model
-            'attribute' => 'type', // foreign key attribute that is shown to user
-            'pivot' => true,
-            'multiple' => true,
+            'attribute' => 'name', // foreign key attribute that is shown to user
 
         ]);
 

@@ -153,7 +153,7 @@ class ListsSeeder extends Seeder
 
         ];
 
-        DB::table('movies_lists')->insert($movies_lists);
+        DB::table('lists_movies')->insert($movies_lists);
 
     }
 }
