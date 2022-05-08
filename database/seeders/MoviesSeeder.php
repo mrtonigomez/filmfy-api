@@ -40,6 +40,12 @@ class MoviesSeeder extends Seeder
                             "entities_id" => $new_entity->id,
                             "movies_id" => $movie_id,
                         ]);
+                    }else {
+                        $result->toArray();
+                        DB::table('entities_movies')->insert([
+                            "entities_id" => $result[0]["id"],
+                            "movies_id" => $movie_id,
+                        ]);
                     }
                 }
             }
