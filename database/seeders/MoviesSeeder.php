@@ -29,6 +29,7 @@ class MoviesSeeder extends Seeder
             foreach ($entities_array as $entity) {
                 if ($entity !== '') {
                     $result = Entities::where('name', '=', $entity,)->where('roles_id', '=', $role)->get();
+
                     if ($result->isEmpty()) {
                         $new_entity = Entities::create([
                             'name' => $entity,
@@ -38,6 +39,12 @@ class MoviesSeeder extends Seeder
 
                         DB::table('entities_movies')->insert([
                             "entities_id" => $new_entity->id,
+                            "movies_id" => $movie_id,
+                        ]);
+                    }else {
+                        $result->toArray();
+                        DB::table('entities_movies')->insert([
+                            "entities_id" => $result[0]["id"],
                             "movies_id" => $movie_id,
                         ]);
                     }

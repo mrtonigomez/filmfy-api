@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\MoviesRestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,3 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::apiResource("movies",MoviesRestController::class);
+Route::get("movies-actor/{id}", [MoviesRestController::class, "moviesActor"]);
