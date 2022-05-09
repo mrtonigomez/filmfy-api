@@ -55,6 +55,26 @@ class UsersCrudController extends CrudController
          */
     }
 
+    protected function setupShowOperation()
+    {
+            CRUD::column('id');
+        CRUD::column('name');
+        CRUD::column('email');
+        CRUD::column('email_verified_at');
+        CRUD::column('password');
+        CRUD::column('remember_token');
+        CRUD::column('created_at');
+        CRUD::column('updated_at');
+        $this->crud->addColumn([
+            // n-n relationship (with pivot table)
+            'label'     => 'Lists', // Table column heading
+            'type'      => 'select',
+            'name'      => 'lists', // the method that defines the relationship in your Model
+            'attribute' => 'title', // foreign key attribute that is shown to user
+            'model'     => 'App\Models\Lists', // foreign key model
+        ])->limit(2000);
+    }
+
     /**
      * Define what happens when the Create operation is loaded.
      *

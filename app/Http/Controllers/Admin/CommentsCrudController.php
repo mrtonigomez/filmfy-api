@@ -57,6 +57,20 @@ class CommentsCrudController extends CrudController
          */
     }
 
+    protected function setupShowOperation()
+    {
+        CRUD::column('id');
+        CRUD::column('movies_id');
+        CRUD::column('users_id');
+        CRUD::column('title');
+        CRUD::column('body');
+        CRUD::column('moderated');
+        CRUD::column('status');
+        CRUD::column('likes');
+        CRUD::column('created_at');
+        CRUD::column('updated_at');
+    }
+
     /**
      * Define what happens when the Create operation is loaded.
      *

@@ -56,6 +56,27 @@ class ListsCrudController extends CrudController
          */
     }
 
+    protected function setupShowOperation()
+    {
+        CRUD::column('id');
+        CRUD::column('users_id');
+        CRUD::column('title')->limit(255);
+        CRUD::column('description')->limit(2000);
+        CRUD::column('is_private');
+        CRUD::column('status');
+        CRUD::column('likes');
+        $this->crud->addColumn([
+            // n-n relationship (with pivot table)
+            'label'     => 'Movies', // Table column heading
+            'type'      => 'select_multiple',
+            'name'      => 'movies', // the method that defines the relationship in your Model
+            'attribute' => 'title', // foreign key attribute that is shown to user
+            'model'     => 'App\Models\Movies', // foreign key model
+        ]);
+        CRUD::column('created_at');
+        CRUD::column('updated_at');
+    }
+
     /**
      * Define what happens when the Create operation is loaded.
      *
@@ -66,7 +87,17 @@ class ListsCrudController extends CrudController
     {
         CRUD::setValidation(ListsRequest::class);
 
-        CRUD::field('users_id');
+        $this->crud->addField([
+            'name' => 'users',
+            'label' => 'Users',
+            'type' => 'select',
+
+            'model' => 'App\Models\User',
+            'options'   => (function ($query) {
+                return $query->orderBy('name', 'ASC')->get();
+            }), //  you can use this to filter the results show in the select
+
+        ]);
         CRUD::field('title');
         CRUD::field('description');
         CRUD::field('is_private');
