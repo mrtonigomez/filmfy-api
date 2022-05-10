@@ -56,12 +56,28 @@ class MoviesCrudController extends CrudController
     {
         CRUD::column('id');
         CRUD::column('title');
-        CRUD::column('description');
+        CRUD::column('description')->limit(2000);
         CRUD::column('release_date');
         CRUD::column('runtime');
         CRUD::column('status');
-        CRUD::column('trailer');
+        CRUD::column('trailer')->limit(255);
         CRUD::column('category');
+        $this->crud->addColumn([
+            // n-n relationship (with pivot table)
+            'label'     => 'Entities', // Table column heading
+            'type'      => 'select_multiple',
+            'name'      => 'entities', // the method that defines the relationship in your Model
+            'attribute' => 'name', // foreign key attribute that is shown to user
+            'model'     => 'App\Models\Entities', // foreign key model
+        ]);
+        $this->crud->addColumn([
+            // n-n relationship (with pivot table)
+            'label'     => 'Comments', // Table column heading
+            'type'      => 'select',
+            'name'      => 'comment', // the method that defines the relationship in your Model
+            'attribute' => 'title', // foreign key attribute that is shown to user
+            'model'     => 'App\Models\Comments', // foreign key model
+        ])->limit(10000);
     }
 
     /**
@@ -101,13 +117,9 @@ class MoviesCrudController extends CrudController
 
         $this->crud->addField([
             'name' => 'entities',
-            'label' => 'Directores',
+            'label' => 'Entities',
             'type' => 'select_multiple',
             'tab' => 'Personas involucradas',
-            'attributes' => [
-                'class' => 'form-control form-select',
-                'multiple' => 'multiple'
-            ],
 
             'model' => 'App\Models\Entities',
             'attribute' => 'name', // foreign key attribute that is shown to user

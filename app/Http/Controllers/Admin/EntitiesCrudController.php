@@ -57,6 +57,26 @@ class EntitiesCrudController extends CrudController
          */
     }
 
+    protected function setupShowOperation()
+    {
+        CRUD::column('id');
+        CRUD::column('name');
+        CRUD::column('formdate');
+        CRUD::column('status');
+        CRUD::column('image');
+        CRUD::column('country_id');
+        CRUD::column('roles');
+        CRUD::column('created_at');
+        CRUD::column('updated_at');
+        $this->crud->addColumn([
+            // n-n relationship (with pivot table)
+            'label'     => 'Movies', // Table column heading
+            'type'      => 'select_multiple',
+            'name'      => 'movies', // the method that defines the relationship in your Model
+            'model'     => 'App\Models\Movies', // foreign key model
+        ]);
+    }
+
     /**
      * Define what happens when the Create operation is loaded.
      *
@@ -81,6 +101,20 @@ class EntitiesCrudController extends CrudController
             'model' => "App\Models\Roles", // related model
             'attribute' => 'name', // foreign key attribute that is shown to user
 
+        ]);
+
+        $this->crud->addField([
+            // n-n relationship (with pivot table)
+            'label'     => 'Movies', // Table column heading
+            'type'      => 'select_multiple',
+            'name'      => 'movies', // the method that defines the relationship in your Model
+            'attribute' => 'title', // foreign key attribute that is shown to user
+            'model'     => 'App\Models\Movies', // foreign key model
+            'pivot' => true,
+            'multiple' => true,
+            'options'   => (function ($query) {
+                return $query->orderBy('title', 'ASC')->get();
+            }), //  you can use this to filter the results show in the select
         ]);
 
         /**
