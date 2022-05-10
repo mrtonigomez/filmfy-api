@@ -20,4 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource("movies",MoviesRestController::class);
-Route::get("movies-actor/{id}", [MoviesRestController::class, "moviesActor"]);
+Route::get("movies-actors/{id}", [MoviesRestController::class, "moviesActor"]);
+Route::post("movies-categories", [MoviesRestController::class, "moviesWithCategory"]);
+Route::post("find-movies", [MoviesRestController::class, "findMovies"]);

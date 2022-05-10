@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Categories;
+use App\Models\Entities;
 use App\Models\Movies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -66,13 +68,40 @@ class MoviesRestController extends Controller
         //
     }
 
+    //Show all movies from an actor
     public function moviesActor($id)
     {
-        $movies_actor = DB::table( "movies as m")
+        $movies_actor = DB::table("movies as m")
             ->select("*")
             ->join("entities_movies as e", "m.id", "=", "e.movies_id")
+            ->join("entities as en", "e.entities_id", "=", "en.id")
+            ->where("en.roles_id", "=", 1)
             ->where("e.entities_id", "=", $id)
             ->get();
         return $movies_actor;
+    }
+
+    //Find movies name
+    public function findMovies(Request $request)
+    {
+        $parameterToFind = "%" . $request->key . "%";
+        $movies = DB::table("movies")
+            ->where("title", "like", $parameterToFind)->get();
+        return $movies;
+    }
+
+    //Return movies related to a one category
+    public function moviesWithCategory(Request $request)
+    {
+        $category_id = DB::table("categories")
+            ->where("name", "=", $request->category)
+            ->value("id");
+
+        $movies_categories = DB::table("movies as m")
+            ->select("*")
+            ->join("categories_movies as c", "m.id", "=", "c.movies_id")
+            ->where("c.categories_id", "=", $category_id)
+            ->get();
+        return $movies_categories;
     }
 }
