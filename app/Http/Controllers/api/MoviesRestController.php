@@ -72,7 +72,7 @@ class MoviesRestController extends Controller
     public function moviesActor($id)
     {
         $movies_actor = DB::table("movies as m")
-            ->select("*")
+            ->select("m.id", "m.title", "m.description", "m.release_date", "m.runtime", "m.status", "m.trailer")
             ->join("entities_movies as e", "m.id", "=", "e.movies_id")
             ->join("entities as en", "e.entities_id", "=", "en.id")
             ->where("en.roles_id", "=", 1)
@@ -98,7 +98,7 @@ class MoviesRestController extends Controller
             ->value("id");
 
         $movies_categories = DB::table("movies as m")
-            ->select("*")
+            ->select("m.id", "m.title", "m.description", "m.release_date", "m.runtime", "m.status", "m.trailer")
             ->join("categories_movies as c", "m.id", "=", "c.movies_id")
             ->where("c.categories_id", "=", $category_id)
             ->get();
