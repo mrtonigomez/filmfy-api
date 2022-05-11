@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\ListsRestController;
 use App\Http\Controllers\api\MoviesRestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,3 +24,5 @@ Route::apiResource("movies",MoviesRestController::class);
 Route::get("movies-actors/{id}", [MoviesRestController::class, "moviesActor"]);
 Route::post("movies-categories", [MoviesRestController::class, "moviesWithCategory"]);
 Route::post("find-movies", [MoviesRestController::class, "findMovies"]);
+
+Route::get("user-lists/{id}", [ListsRestController::class, "listsUsers"]);
