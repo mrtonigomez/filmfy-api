@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Categories;
-use App\Models\Entities;
 use App\Models\Movies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -72,7 +70,7 @@ class MoviesRestController extends Controller
     public function moviesActor($id)
     {
         $movies_actor = DB::table("movies as m")
-            ->select("m.id", "m.title", "m.description", "m.release_date", "m.runtime", "m.status", "m.trailer")
+            ->select("m.id", "m.title", "m.description", "m.release_date", "m.runtime", "m.status", "m.trailer", "m.image")
             ->join("entities_movies as e", "m.id", "=", "e.movies_id")
             ->join("entities as en", "e.entities_id", "=", "en.id")
             ->where("en.roles_id", "=", 1)
@@ -84,7 +82,7 @@ class MoviesRestController extends Controller
     //Find movies name
     public function findMovies(Request $request)
     {
-        $parameterToFind = "%" . $request->key . "%";
+        $parameterToFind = "%" . $request->category . "%";
         $movies = DB::table("movies")
             ->where("title", "like", $parameterToFind)->get();
         return $movies;
@@ -98,10 +96,15 @@ class MoviesRestController extends Controller
             ->value("id");
 
         $movies_categories = DB::table("movies as m")
-            ->select("m.id", "m.title", "m.description", "m.release_date", "m.runtime", "m.status", "m.trailer")
+            ->select("m.id", "m.title", "m.description", "m.release_date", "m.runtime", "m.status", "m.trailer", "m.image")
             ->join("categories_movies as c", "m.id", "=", "c.movies_id")
             ->where("c.categories_id", "=", $category_id)
             ->get();
         return $movies_categories;
+    }
+
+    public function recentMovies()
+    {
+
     }
 }
