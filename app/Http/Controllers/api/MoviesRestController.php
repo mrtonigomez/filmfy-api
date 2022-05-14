@@ -70,7 +70,7 @@ class MoviesRestController extends Controller
     public function moviesActor($id)
     {
         $movies_actor = DB::table("movies as m")
-            ->select("m.id", "m.title", "m.description", "m.release_date", "m.runtime", "m.status", "m.trailer", "m.image")
+            ->select("m.*")
             ->join("entities_movies as e", "m.id", "=", "e.movies_id")
             ->join("entities as en", "e.entities_id", "=", "en.id")
             ->where("en.roles_id", "=", 1)
@@ -82,7 +82,8 @@ class MoviesRestController extends Controller
     //Find movies name
     public function findMovies(Request $request)
     {
-        $parameterToFind = "%" . $request->category . "%";
+        $parameterToSearch = $request->selector;
+        $parameterToFind = "%" . $request->parameter . "%";
         $movies = DB::table("movies")
             ->where("title", "like", $parameterToFind)->get();
         return $movies;

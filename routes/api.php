@@ -22,6 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource("movies",MoviesRestController::class);
 Route::get("movies-actors/{id}", [MoviesRestController::class, "moviesActor"]);
+
+#TODO @tonigomez mirar de cambiar los post por get
 Route::post("movies-categories", [MoviesRestController::class, "moviesWithCategory"]);
 Route::post("find-movies", [MoviesRestController::class, "findMovies"]);
 Route::get("recent-movies", [MoviesRestController::class, "recentMovies"]);

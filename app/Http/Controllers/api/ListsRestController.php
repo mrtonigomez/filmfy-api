@@ -48,6 +48,7 @@ class ListsRestController extends Controller
         $user_lists = [
             "id" => $list["id"],
             "title" => $list["title"],
+            "description" => $list["description"],
             "movies" => $moviesList
         ];
 
@@ -74,7 +75,10 @@ class ListsRestController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $list = Lists::find($id);
+        $list->status = 0;
+        return $list->save();
+
     }
 
     public function moviesFromList($idList)
@@ -110,4 +114,6 @@ class ListsRestController extends Controller
         }
         return $user_lists;
     }
+
+
 }
