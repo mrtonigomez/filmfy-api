@@ -19,32 +19,12 @@ class MoviesSeeder extends Seeder
     {
         Schema::disableForeignKeyConstraints();
 
-<<<<<<< HEAD
         $sql_data = [
         file_get_contents(base_path('database/resources/movies.sql')),
         file_get_contents(base_path('database/resources/categories_movies.sql')),
         file_get_contents(base_path('database/resources/entities.sql')),
         file_get_contents(base_path('database/resources/entities_movies.sql')),
         ];
-=======
-        /** Function to store entities, roles and associated movies from CSV file
-         * @param $entities_array
-         * @param $role
-         * @param $movie_id
-         * @return void
-         */
-        function entities_seed($entities_array, $role, $movie_id) {
-            foreach ($entities_array as $entity) {
-                if ($entity !== '') {
-                    $result = Entities::where('name', '=', $entity,)->where('roles_id', '=', $role)->get();
-
-                    if ($result->isEmpty()) {
-                        $new_entity = Entities::create([
-                            'name' => $entity,
-                            'roles_id' => $role,
-                        ]);
-                        $new_entity->save();
->>>>>>> api
 
         foreach ($sql_data as $sql){
             DB::unprepared($sql);
