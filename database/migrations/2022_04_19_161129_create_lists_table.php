@@ -20,7 +20,6 @@ class CreateListsTable extends Migration
             $table->string('description', 750);
             $table->boolean('is_private');
             $table->boolean('status');
-            $table->integer('likes');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 

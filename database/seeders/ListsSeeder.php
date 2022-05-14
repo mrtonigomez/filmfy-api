@@ -21,7 +21,6 @@ class ListsSeeder extends Seeder
                 'description' => 'Películas que he visto este año',
                 'is_private' => 0,
                 'status' => 1,
-                'likes' => 5,
             ],
             [
                 'users_id' => 1,
@@ -29,7 +28,6 @@ class ListsSeeder extends Seeder
                 'description' => 'Aquí están todas las pelis de StarWards que he encontrado en Filmfy',
                 'is_private' => 0,
                 'status' => 1,
-                'likes' => 87,
             ],
             [
                 'users_id' => 1,
@@ -37,7 +35,6 @@ class ListsSeeder extends Seeder
                 'description' => 'Creo que estas películas han ganado un premio bueno de estos aunque es altamente probable que me equivoque',
                 'is_private' => 0,
                 'status' => 1,
-                'likes' => 9,
             ],
             [
                 'users_id' => 1,
@@ -45,7 +42,6 @@ class ListsSeeder extends Seeder
                 'description' => 'Estas pelis me han emocionado mucho y no querría olvidarlas nunca',
                 'is_private' => 0,
                 'status' => 0,
-                'likes' => 30,
             ],
             [
                 'users_id' => 2,
@@ -53,7 +49,6 @@ class ListsSeeder extends Seeder
                 'description' => 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. ',
                 'is_private' => 0,
                 'status' => 1,
-                'likes' => 5,
             ],
             [
                 'users_id' => 2,
@@ -61,7 +56,6 @@ class ListsSeeder extends Seeder
                 'description' => 'Estas son mis películas, las de Toni Gómez',
                 'is_private' => 0,
                 'status' => 1,
-                'likes' => 5,
             ],
             [
                 'users_id' => 2,
@@ -69,7 +63,6 @@ class ListsSeeder extends Seeder
                 'description' => 'Si hay alguien que no haya visto estas películas ya tiene deberes que hacer',
                 'is_private' => 0,
                 'status' => 1,
-                'likes' => 5,
             ],
             [
                 'users_id' => 3,
@@ -77,7 +70,6 @@ class ListsSeeder extends Seeder
                 'description' => 'Pues esto es una historia que me acabo de enviar',
                 'is_private' => 1,
                 'status' => 1,
-                'likes' => 0,
             ],
             [
                 'users_id' => 3,
@@ -85,7 +77,6 @@ class ListsSeeder extends Seeder
                 'description' => 'He escogido muchas películas para tener una lista en Filmfy',
                 'is_private' => 0,
                 'status' => 1,
-                'likes' => 32,
             ],
         ];
 
