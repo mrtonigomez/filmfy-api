@@ -127,7 +127,7 @@ class ListsSeeder extends Seeder
             [ 'lists_id' => 5, 'movies_id' => 225,],
 
             [ 'lists_id' => 6, 'movies_id' => 25,],
-            [ 'lists_id' => 6, 'movies_id' => 277,],
+            [ 'lists_id' => 6, 'movies_id' => 266,],
             [ 'lists_id' => 6, 'movies_id' => 177,],
             [ 'lists_id' => 6, 'movies_id' => 77,],
             [ 'lists_id' => 6, 'movies_id' => 7,],
