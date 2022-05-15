@@ -20,7 +20,7 @@ class CreateCommentsTable extends Migration
             $table->string('title', 75);
             $table->string('body', 1000);
             $table->boolean('moderated');
-            $table->boolean('status');
+            $table->boolean('status')->default(1);
             $table->integer('likes');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
