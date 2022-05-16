@@ -16,8 +16,24 @@ class MoviesRestController extends Controller
      */
     public function index()
     {
-        $movies = Movies::all();
-        return $movies;
+        //TODO: Return all data from a movie (category, directors, actors...)
+        $moviesAll = Movies::all();
+        $movies;
+
+        foreach ($moviesAll->toArray() as $key => $movie) {
+
+            $cat = DB::table("categories_movies as cm")
+                ->select("c.name")
+                ->where("movies_id", "=", $movie["id"])
+                ->join("categories as c", "c.id", "=", "cm.categories_id")
+                ->get();
+            $movie["id"] = 3;
+            $movie["categories"] = $cat;
+            var_dump($movie);
+        }
+
+
+        return $moviesAll;
     }
 
     /**
@@ -39,6 +55,7 @@ class MoviesRestController extends Controller
      */
     public function show($id)
     {
+        //TODO: Return all data from a movie (category, directors, actors...)
         $movie = Movies::find($id);
         return $movie;
     }
@@ -90,11 +107,12 @@ class MoviesRestController extends Controller
     }
 
     //Return movies related to a one category
-    public function moviesWithCategory(Request $request)
+    public function moviesWithCategory($category)
     {
         $category_id = DB::table("categories")
-            ->where("name", "=", $request->category)
+            ->where("name", "=", $category)
             ->value("id");
+        var_dump($category_id);
 
         $movies_categories = DB::table("movies as m")
             ->select("m.id", "m.title", "m.description", "m.release_date", "m.runtime", "m.status", "m.trailer", "m.image")
