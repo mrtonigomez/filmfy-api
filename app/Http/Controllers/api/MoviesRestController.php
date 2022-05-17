@@ -18,22 +18,54 @@ class MoviesRestController extends Controller
     {
         //TODO: Return all data from a movie (category, directors, actors...)
         $moviesAll = Movies::all();
-        $movies;
+        $movies = [];
 
         foreach ($moviesAll->toArray() as $key => $movie) {
+            $categories = [];
+            $actors = [];
+            $directors = [];
 
-            $cat = DB::table("categories_movies as cm")
+            $categoriesObject = DB::table("categories_movies as cm")
                 ->select("c.name")
-                ->where("movies_id", "=", $movie["id"])
                 ->join("categories as c", "c.id", "=", "cm.categories_id")
+                ->where("movies_id", "=", $movie["id"])
                 ->get();
-            $movie["id"] = 3;
-            $movie["categories"] = $cat;
-            var_dump($movie);
+
+            foreach ($categoriesObject as $category) {
+                array_push($categories, $category->name);
+            }
+
+            $actorsObject = DB::table("entities_movies as em")
+                ->select("e.name")
+                ->join("entities as e", "e.id", "=", "em.entities_id")
+                ->where("movies_id", "=", $movie["id"])
+                ->where("e.roles_id", "=", 1)
+                ->get();
+
+            foreach ($actorsObject as $actor) {
+                array_push($actors, $actor->name);
+            }
+
+            $directorsObject = DB::table("entities_movies as em")
+                ->select("e.name")
+                ->join("entities as e", "e.id", "=", "em.entities_id")
+                ->where("movies_id", "=", $movie["id"])
+                ->where("e.roles_id", "=", 2)
+                ->get();
+
+            foreach ($directorsObject as $director) {
+                array_push($directors, $director->name);
+            }
+
+            $movie["categories"] = $categories;
+            $movie["actors"] = $actors;
+            $movie["directors"] = $directors;
+
+            array_push($movies, $movie);
         }
 
 
-        return $moviesAll;
+        return $movies;
     }
 
     /**
