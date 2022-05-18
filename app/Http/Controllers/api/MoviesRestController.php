@@ -16,50 +16,18 @@ class MoviesRestController extends Controller
      */
     public function index()
     {
-        //TODO: Return all data from a movie (category, directors, actors...)
         $moviesAll = Movies::all();
         $movies = [];
 
         foreach ($moviesAll->toArray() as $key => $movie) {
-            $categories = [];
-            $actors = [];
-            $directors = [];
 
-            $categoriesObject = DB::table("categories_movies as cm")
-                ->select("c.name")
-                ->join("categories as c", "c.id", "=", "cm.categories_id")
-                ->where("movies_id", "=", $movie["id"])
-                ->get();
+            $data = Movies::returnExtraInformation($movie["id"]);
 
-            foreach ($categoriesObject as $category) {
-                array_push($categories, $category->name);
-            }
-
-            $actorsObject = DB::table("entities_movies as em")
-                ->select("e.name")
-                ->join("entities as e", "e.id", "=", "em.entities_id")
-                ->where("movies_id", "=", $movie["id"])
-                ->where("e.roles_id", "=", 1)
-                ->get();
-
-            foreach ($actorsObject as $actor) {
-                array_push($actors, $actor->name);
-            }
-
-            $directorsObject = DB::table("entities_movies as em")
-                ->select("e.name")
-                ->join("entities as e", "e.id", "=", "em.entities_id")
-                ->where("movies_id", "=", $movie["id"])
-                ->where("e.roles_id", "=", 2)
-                ->get();
-
-            foreach ($directorsObject as $director) {
-                array_push($directors, $director->name);
-            }
-
-            $movie["categories"] = $categories;
-            $movie["actors"] = $actors;
-            $movie["directors"] = $directors;
+            $movie["categories"] = $data["categories"];
+            $movie["actors"] = $data["actors"];
+            $movie["directors"] = $data["directors"];
+            $movie["writters"] = $data["writters"];
+            $movie["comments"] = $data["comments"];
 
             array_push($movies, $movie);
         }
@@ -87,8 +55,17 @@ class MoviesRestController extends Controller
      */
     public function show($id)
     {
-        //TODO: Return all data from a movie (category, directors, actors...)
         $movie = Movies::find($id);
+        $data = Movies::returnExtraInformation($id);
+
+
+        $movie["categories"] = $data["categories"];
+        $movie["actors"] = $data["actors"];
+        $movie["directors"] = $data["directors"];
+        $movie["writters"] = $data["writters"];
+        $movie["comments"] = $data["comments"];
+
+
         return $movie;
     }
 
@@ -144,7 +121,6 @@ class MoviesRestController extends Controller
         $category_id = DB::table("categories")
             ->where("name", "=", $category)
             ->value("id");
-        var_dump($category_id);
 
         $movies_categories = DB::table("movies as m")
             ->select("m.id", "m.title", "m.description", "m.release_date", "m.runtime", "m.status", "m.trailer", "m.image")
@@ -156,6 +132,12 @@ class MoviesRestController extends Controller
 
     public function recentMovies()
     {
+        $movies = DB::table("movies")
+            ->select("*")
+            ->orderBy("release_date", "DESC")
+            ->limit(10)
+            ->get();
 
+        return $movies;
     }
 }
