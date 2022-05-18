@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Entities;
 use App\Models\Movies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +32,6 @@ class MoviesRestController extends Controller
 
             array_push($movies, $movie);
         }
-
 
         return $movies;
     }
@@ -95,13 +95,7 @@ class MoviesRestController extends Controller
     //Show all movies from an actor
     public function moviesActor($id)
     {
-        $movies_actor = DB::table("movies as m")
-            ->select("m.*")
-            ->join("entities_movies as e", "m.id", "=", "e.movies_id")
-            ->join("entities as en", "e.entities_id", "=", "en.id")
-            ->where("en.roles_id", "=", 1)
-            ->where("e.entities_id", "=", $id)
-            ->get();
+        $movies_actor = Entities::find($id)->movies;
         return $movies_actor;
     }
 
@@ -110,6 +104,7 @@ class MoviesRestController extends Controller
     {
         $parameterToSearch = $request->selector;
         $parameterToFind = "%" . $request->parameter . "%";
+
         $movies = DB::table("movies")
             ->where("title", "like", $parameterToFind)->get();
         return $movies;

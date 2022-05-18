@@ -38,7 +38,7 @@ class UsersRestController extends Controller
      */
     public function show($id)
     {
-        $user = User::find();
+        $user = User::find($id);
         return $user;
     }
 
