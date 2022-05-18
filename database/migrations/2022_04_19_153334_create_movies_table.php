@@ -20,7 +20,7 @@ class CreateMoviesTable extends Migration
             $table->date('release_date');
             $table->string("image");
             $table->integer('runtime');
-            $table->boolean('status');
+            $table->boolean('status')->default(1);
             $table->string('trailer');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();

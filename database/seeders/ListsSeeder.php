@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class ListsSeeder extends Seeder
 {
@@ -14,6 +15,8 @@ class ListsSeeder extends Seeder
      */
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
+
         $lists = [
             [
                 'users_id' => 1,
@@ -124,7 +127,7 @@ class ListsSeeder extends Seeder
             [ 'lists_id' => 5, 'movies_id' => 225,],
 
             [ 'lists_id' => 6, 'movies_id' => 25,],
-            [ 'lists_id' => 6, 'movies_id' => 277,],
+            [ 'lists_id' => 6, 'movies_id' => 266,],
             [ 'lists_id' => 6, 'movies_id' => 177,],
             [ 'lists_id' => 6, 'movies_id' => 77,],
             [ 'lists_id' => 6, 'movies_id' => 7,],
@@ -146,5 +149,6 @@ class ListsSeeder extends Seeder
 
         DB::table('lists_movies')->insert($movies_lists);
 
+        Schema::enableForeignKeyConstraints();
     }
 }
