@@ -23,7 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource("movies",MoviesRestController::class);
 Route::get("movies-actors/{id}", [MoviesRestController::class, "moviesActor"]);
 
-#TODO @tonigomez mirar de cambiar los post por get
 Route::get("movies-categories/{category}", [MoviesRestController::class, "moviesWithCategory"]);
 Route::post("find-movies", [MoviesRestController::class, "findMovies"]);
 Route::get("recent-movies", [MoviesRestController::class, "recentMovies"]);
@@ -31,3 +30,4 @@ Route::get("recent-movies", [MoviesRestController::class, "recentMovies"]);
 Route::apiResource("lists", ListsRestController::class);
 Route::get("movies-from-list/{id}", [ListsRestController::class, "moviesFromList"]);
 Route::get("user-lists/{id}", [ListsRestController::class, "userLists"]);
+Route::post("add-movie-to-list", [ListsRestController::class, "addMoviesToList"]);

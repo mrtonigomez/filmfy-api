@@ -43,6 +43,8 @@ class MoviesCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        $this->crud->addButtonFromView('line', 'clone', 'clone', 'beginning');
+
         CRUD::column('id');
         CRUD::column('title');
         CRUD::column('description');
@@ -141,5 +143,26 @@ class MoviesCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function clone($id)
+    {
+        $movie = Movies::find($id);
+
+        $cloneMovie = [
+            "title" => $movie["title"],
+            "description" => $movie["description"],
+            "release_date" => $movie["release_date"],
+            "image" => $movie["image"],
+            "runtime" => $movie["runtime"],
+            "status" => $movie["status"],
+            "trailer" => $movie["trailer"],
+        ];
+
+        DB::table("movies")
+            ->insert($cloneMovie);
+
+
+        return redirect("/admin/movies");
     }
 }

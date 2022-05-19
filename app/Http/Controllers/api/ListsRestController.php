@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lists;
+use App\Models\Movies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,7 +17,7 @@ class ListsRestController extends Controller
      */
     public function index()
     {
-        //
+        return Lists::all();
     }
 
     /**
@@ -40,16 +41,14 @@ class ListsRestController extends Controller
     {
         $list = Lists::find($id);
 
-        $moviesList = DB::table("movies as m")
-            ->join("lists_movies as lm", "lm.movies_id", "=", "m.id")
-            ->where("lists_id", "=", $list["id"])
-            ->get();
-
         $user_lists = [
             "id" => $list["id"],
+            "users_id" => $list["users_id"],
             "title" => $list["title"],
             "description" => $list["description"],
-            "movies" => $moviesList
+            "is_private" => $list["is_private"],
+            "status" => $list["status"],
+            "movies" => $list->movies
         ];
 
         return $user_lists;
@@ -115,5 +114,26 @@ class ListsRestController extends Controller
         return $user_lists;
     }
 
+    public function addMoviesToList(Request $request) {
+
+        $data = [
+            "lists_id" => $request->lists_id,
+            "movies_id" => $request->movies_id
+        ];
+
+        $moviesInList = Lists::find($request->lists_id)->movies;
+
+        foreach ($moviesInList as $movie) {
+            if ($movie->id == $request->movies_id){
+                return "La peícula ya se ha introducido";
+            }
+        }
+
+        DB::table("lists_movies")
+            ->insert($data);
+
+        return "Insert correcto";
+
+    }
 
 }
