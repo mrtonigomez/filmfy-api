@@ -90,6 +90,7 @@ class CommentsRestController extends Controller
         $comments = DB::table("comments as c")
             ->select('m.title as m_title','m.release_date as m_release', 'm.image as m_image', 'c.*')
             ->leftJoin('movies as m','m.id' , '=', 'c.movies_id')
+            ->leftJoin('users as u','u.id' , '=', 'c.users_id')
             ->orderBy("c.updated_at", "DESC")
             ->limit(5)
             ->get();
