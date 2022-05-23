@@ -125,6 +125,23 @@ class MoviesRestController extends Controller
         return $movies_categories;
     }
 
+    public function moviesYear($year)
+    {
+        $allMovie = [];
+        for ($i = $year + 1; $i < ($year + 11); $i++) {
+            $movies = DB::table("movies")
+                ->select("*")
+                ->where("release_date", "like", "%" . $i . "%")
+                ->get();
+
+            foreach ($movies as $movie) {
+                array_push($allMovie, $movie);
+            }
+        }
+
+        return $allMovie;
+    }
+
     public function recentMovies()
     {
         $movies = DB::table("movies")
