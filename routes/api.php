@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\CommentsRestController;
 use App\Http\Controllers\api\ListsRestController;
 use App\Http\Controllers\api\MoviesRestController;
 use Illuminate\Http\Request;
@@ -34,3 +35,8 @@ Route::get("user-lists/{id}", [ListsRestController::class, "userLists"]);
 Route::post("add-movie-to-list", [ListsRestController::class, "addMoviesToList"]);
 
 Route::apiResource("categories", \App\Http\Controllers\api\CategoriesRestController::class);
+
+Route::apiResource("comments",CommentsRestController::class);
+Route::get("comments-movie/{id}", [CommentsRestController::class, "movieComments"]);
+Route::get("comments-recent", [CommentsRestController::class, "recentComments"]);
+Route::post("comments-store/{movie_id}", [CommentsRestController::class, "store"]);
