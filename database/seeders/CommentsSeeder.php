@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class CommentsSeeder extends Seeder
 {
@@ -80,5 +81,8 @@ class CommentsSeeder extends Seeder
                 'likes' => 0
             ]
         ];
+
+        DB::table('comments')->insert($comments);
+
     }
 }
