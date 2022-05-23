@@ -88,8 +88,9 @@ class CommentsRestController extends Controller
     public function recentComments()
     {
         $comments = DB::table("comments as c")
-            ->select('m.id','m.title','m.release_date', 'm.image','c.*')
+            ->select('m.id','m.title','m.release_date', 'm.image','c.*', 'u.name as u_name')
             ->leftJoin('movies as m','m.id' , '=', 'c.movies_id')
+            ->leftJoin('users as u','u.id' , '=', 'c.users_id')
             ->orderBy("c.updated_at", "DESC")
             ->limit(5)
             ->get();
