@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Comments;
 use App\Models\Lists;
 use App\Models\Movies;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CommentsRestController extends Controller
@@ -27,9 +29,26 @@ class CommentsRestController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $movie_id)
     {
-        //
+        $user_id = Auth::user()->id;
+
+        $new_comment = DB::table('comments')
+            ->insert([
+                'movies_id' => $movie_id,
+                'users_id' => $user_id,
+                'title' => $request->title,
+                'body' => $request->body,
+                'argument' => $request->argument,
+                'actors' => $request->actors,
+                'image' => $request->image,
+                'sound' => $request->sound,
+                'montage' => $request->montage,
+                'effects' => $request->effects,
+            ]);
+
+        return $new_comment;
+
     }
 
     /**
