@@ -19,12 +19,7 @@ class CreateCommentsTable extends Migration
             $table->unsignedInteger('users_id');
             $table->string('title', 75);
             $table->string('body', 1000);
-            $table->integer('argument');
-            $table->integer('actors');
-            $table->integer('image');
-            $table->integer('sound');
-            $table->integer('montage');
-            $table->integer('effects');
+            $table->integer('rating');
             $table->boolean('moderated')->default(1);
             $table->boolean('status')->default(1);
             $table->integer('likes');
