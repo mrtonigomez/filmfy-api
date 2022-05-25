@@ -33,7 +33,7 @@ class Lists extends Model
     public static function moviesImgAtList($id) {
         $movies_img = [];
 
-        $moviesObject = Lists::find($id)->movies;
+        $moviesObject = Lists::find($id)->take(5)->movies;
         foreach ($moviesObject as $movie) {
             array_push($movies_img, $movie->image);
         }
