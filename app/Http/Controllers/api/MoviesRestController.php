@@ -64,7 +64,7 @@ class MoviesRestController extends Controller
         $movie["directors"] = $data["directors"];
         $movie["writters"] = $data["writters"];
         $movie["comments"] = $data["comments"];
-
+        $movie["likes"] = $data["likes"];
 
         return $movie;
     }
@@ -97,6 +97,22 @@ class MoviesRestController extends Controller
     {
         $movies_actor = Entities::find($id)->movies;
         return $movies_actor;
+    }
+
+    public function moviesLikes($id)
+    {
+        $movies_likes = Movies::find($id)->likes;
+        return count($movies_likes);
+    }
+
+    public function moviesStoreLikes(Request $request)
+    {
+        $data = [
+            "movies_id" => $request->movies_id,
+            "users_id" => $request->users_id
+        ];
+
+        DB::table("movies_likes")->insert($data);
     }
 
     //Find movies name

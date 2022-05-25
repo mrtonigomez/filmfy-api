@@ -44,6 +44,7 @@ class Movies extends Model
         $directors = [];
         $writters = [];
         $comments = [];
+        $likes = 0;
 
         $categoriesObject = Movies::find($id)->category;
         foreach ($categoriesObject as $category) {
@@ -74,12 +75,19 @@ class Movies extends Model
             array_push($comments, $comment);
         }
 
+        $likesObject = Movies::find($id)->likes;
+
+        foreach ($likesObject as $like) {
+            $likes++;
+        }
+
         $data = [
             "categories" => $categories,
             "actors" => $actors,
             "directors" => $directors,
             "writters" => $writters,
-            "comments" => $comments
+            "comments" => $comments,
+            "likes" => $likes
         ];
 
         return $data;
@@ -100,6 +108,10 @@ class Movies extends Model
 
     public function comment(){
         return $this->hasMany(Comments::class);
+    }
+
+    public function likes() {
+        return $this->hasMany(MoviesLikes::class);
     }
 
     /*

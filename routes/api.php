@@ -23,6 +23,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource("movies",MoviesRestController::class);
 Route::get("movies-actors/{id}", [MoviesRestController::class, "moviesActor"]);
+Route::get("movies-likes/{id}", [MoviesRestController::class, "moviesLikes"]);
+Route::post("movies-likes", [MoviesRestController::class, "moviesStoreLikes"]);
 
 Route::get("movies-categories/{category}", [MoviesRestController::class, "moviesWithCategory"]);
 Route::get("movies-year/{year}", [MoviesRestController::class, "moviesYear"]);
@@ -40,3 +42,4 @@ Route::apiResource("comments",CommentsRestController::class);
 Route::get("comments-movie/{id}", [CommentsRestController::class, "movieComments"]);
 Route::get("comments-recent", [CommentsRestController::class, "recentComments"]);
 Route::post("comments-store/{movie_id}", [CommentsRestController::class, "store"]);
+

@@ -25,4 +25,6 @@ Route::group([
     Route::crud('lists', 'ListsCrudController');
     Route::crud('entities', 'EntitiesCrudController');
     Route::crud('roles', 'RolesCrudController');
+    Route::crud('movies-likes', 'MoviesLikesCrudController');
+    Route::crud('lists-likes', 'ListsLikesCrudController');
 }); // this should be the absolute last line of this file
