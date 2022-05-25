@@ -29,6 +29,7 @@ class MoviesRestController extends Controller
             $movie["directors"] = $data["directors"];
             $movie["writters"] = $data["writters"];
             $movie["comments"] = $data["comments"];
+            $movie["likes"] = $data["likes"];
 
             array_push($movies, $movie);
         }
@@ -134,9 +135,11 @@ class MoviesRestController extends Controller
             ->value("id");
 
         $movies_categories = DB::table("movies as m")
-            ->select("m.id", "m.title", "m.description", "m.release_date", "m.runtime", "m.status", "m.trailer", "m.image")
+            ->select('m.id', "m.title", "m.description", "m.image",  DB::raw("count(ml.id) as likes"))
             ->join("categories_movies as c", "m.id", "=", "c.movies_id")
+            ->join("movies_likes as ml", "ml.movies_id", "=", "m.id", "left")
             ->where("c.categories_id", "=", $category_id)
+            ->groupBy('m.id', "m.title", "m.description", "m.image")
             ->get();
         return $movies_categories;
     }
@@ -145,10 +148,13 @@ class MoviesRestController extends Controller
     {
         $allMovie = [];
         for ($i = $year + 1; $i < ($year + 11); $i++) {
-            $movies = DB::table("movies")
-                ->select("*")
+            $movies = DB::table("movies as m")
+                ->select("m.title", "m.id", "m.description", "m.image",  DB::raw("count(ml.id) as likes"))
                 ->where("release_date", "like", "%" . $i . "%")
+                ->join("movies_likes as ml", "ml.movies_id", "=", "m.id", "left")
+                ->groupBy('m.id', "m.title", "m.description", "m.image")
                 ->get();
+
 
             foreach ($movies as $movie) {
                 array_push($allMovie, $movie);
@@ -160,12 +166,14 @@ class MoviesRestController extends Controller
 
     public function recentMovies()
     {
-        $movies = DB::table("movies")
-            ->select("*")
+        $moviesAll = DB::table("movies as m")
+            ->select("m.title", "m.id", "m.description", "m.image",  DB::raw("count(ml.id) as likes"))
+            ->join("movies_likes as ml", "ml.movies_id", "=", "m.id", "left")
             ->orderBy("release_date", "DESC")
+            ->groupBy('m.id', "m.title", "m.description", "m.image")
             ->limit(10)
             ->get();
 
-        return $movies;
+        return $moviesAll;
     }
 }
