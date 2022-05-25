@@ -125,7 +125,7 @@ class ListsRestController extends Controller
 
         foreach ($moviesInList as $movie) {
             if ($movie->id == $request->movies_id){
-                return "La peícula ya se ha introducido";
+                return "La película ya se ha introducido";
             }
         }
 
@@ -134,6 +134,31 @@ class ListsRestController extends Controller
 
         return "Insert correcto";
 
+    }
+
+    public function recentLists() {
+
+        $recentLists = [];
+
+        $listsAll = DB::table("lists as l")
+            ->select('l.id as l_id',  'l.title as l_title', 'u.name as u_name', DB::raw('COUNT(ll.id) as l_likes') )
+            ->leftJoin('lists_movies as lm','lm.lists_id' , '=', 'l.id')
+            ->leftJoin('users as u', 'u.id','=', 'l.users_id')
+            ->leftJoin('lists_likes as ll', 'll.lists_id', '=', 'l.id')
+            ->groupBy('l.id', 'l.title', 'u.name')
+            ->orderBy("l.updated_at", "DESC")
+            ->limit(5)
+            ->get();
+
+        foreach ($listsAll as $key => $list) {
+
+            $m_imgs = Lists::moviesImgAtList($list->l_id);
+            $list->m_imgs = $m_imgs;
+
+            array_push($recentLists, $list);
+        }
+
+        return $recentLists;
     }
 
 }

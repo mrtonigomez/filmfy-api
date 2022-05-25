@@ -30,12 +30,15 @@ class Lists extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function users(){
-        return $this->belongsTo(User::class);
-    }
+    public static function moviesImgAtList($id) {
+        $movies_img = [];
 
-    public function movies(){
-        return $this->belongsToMany(Movies::class);
+        $moviesObject = Lists::find($id)->movies;
+        foreach ($moviesObject as $movie) {
+            array_push($movies_img, $movie->image);
+        }
+
+        return $movies_img;
     }
 
     /*
@@ -43,6 +46,14 @@ class Lists extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+
+    public function users(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function movies(){
+        return $this->belongsToMany(Movies::class);
+    }
 
     /*
     |--------------------------------------------------------------------------
