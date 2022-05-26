@@ -116,6 +116,19 @@ class MoviesRestController extends Controller
         DB::table("movies_likes")->insert($data);
     }
 
+    public function bestMovies()
+    {
+        $movies_likes = DB::table("movies as m")
+            ->select("m.title", "m.id", "m.description", "m.image",  DB::raw("count(ml.id) as likes"))
+            ->join("movies_likes as ml", "ml.movies_id", "=", "m.id", "left")
+            ->orderBy("likes", "DESC")
+            ->groupBy('m.id', "m.title", "m.description", "m.image")
+            ->limit(15)
+            ->get();
+
+        return $movies_likes;
+    }
+
     //Find movies name
     public function findMovies(Request $request)
     {
@@ -171,7 +184,7 @@ class MoviesRestController extends Controller
             ->join("movies_likes as ml", "ml.movies_id", "=", "m.id", "left")
             ->orderBy("release_date", "DESC")
             ->groupBy('m.id', "m.title", "m.description", "m.image")
-            ->limit(10)
+            ->limit(15)
             ->get();
 
         return $moviesAll;

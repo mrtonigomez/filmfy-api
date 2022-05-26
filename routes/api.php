@@ -30,6 +30,7 @@ Route::get("movies-categories/{category}", [MoviesRestController::class, "movies
 Route::get("movies-year/{year}", [MoviesRestController::class, "moviesYear"]);
 Route::post("find-movies", [MoviesRestController::class, "findMovies"]);
 Route::get("recent-movies", [MoviesRestController::class, "recentMovies"]);
+Route::get("best-movies", [MoviesRestController::class, "bestMovies"]);
 
 Route::apiResource("lists", ListsRestController::class);
 Route::get("movies-from-list/{id}", [ListsRestController::class, "moviesFromList"]);
