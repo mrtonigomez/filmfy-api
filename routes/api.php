@@ -24,7 +24,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource("movies",MoviesRestController::class);
 Route::get("movies-actors/{id}", [MoviesRestController::class, "moviesActor"]);
 Route::get("movies-likes/{id}", [MoviesRestController::class, "moviesLikes"]);
-Route::post("movies-likes", [MoviesRestController::class, "moviesStoreLikes"]);
+
+Route::group(['middleware' => ['cors']], function () {
+    Route::post("movies-likes", [MoviesRestController::class, "moviesStoreLikes"]);
+});
 
 Route::get("movies-categories/{category}", [MoviesRestController::class, "moviesWithCategory"]);
 Route::get("movies-year/{year}", [MoviesRestController::class, "moviesYear"]);
