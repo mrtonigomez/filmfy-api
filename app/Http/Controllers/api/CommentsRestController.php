@@ -31,20 +31,18 @@ class CommentsRestController extends Controller
      */
     public function store(Request $request, $movie_id)
     {
-        $user_id = Auth::user()->id;
 
         $new_comment = DB::table('comments')
             ->insert([
                 'movies_id' => $movie_id,
-                'users_id' => $user_id,
+                'users_id' => $request->users_id,
                 'title' => $request->title,
                 'body' => $request->body,
-                'argument' => $request->argument,
-                'actors' => $request->actors,
-                'image' => $request->image,
-                'sound' => $request->sound,
-                'montage' => $request->montage,
-                'effects' => $request->effects,
+                'rating' => $request->rating,
+                'moderated' => 0,
+                'status' => 0,
+                'likes' => 0
+
             ]);
 
         return $new_comment;
@@ -101,7 +99,10 @@ class CommentsRestController extends Controller
     public function movieComments($id)
     {
         $movie_comments = DB::table('comments as c')
+            ->select("m.title as movie ", "c.title", "c.body", "c.rating", "c.likes", "m.image", "c.created_at", "u.name as user")
             ->leftJoin('movies as m','m.id' , '=', 'c.movies_id')
+            ->join("users as u", "u.id", "=", "c.users_id")
+            ->orderBy("c.updated_at", "DESC")
             ->where('m.id', '=', $id)->get();
 
         return $movie_comments;
