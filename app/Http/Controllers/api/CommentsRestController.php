@@ -103,7 +103,9 @@ class CommentsRestController extends Controller
             ->leftJoin('movies as m','m.id' , '=', 'c.movies_id')
             ->join("users as u", "u.id", "=", "c.users_id")
             ->orderBy("c.updated_at", "DESC")
-            ->where('m.id', '=', $id)->get();
+            ->where('m.id', '=', $id)
+            ->limit(5)
+            ->get();
 
         return $movie_comments;
     }
