@@ -27,6 +27,7 @@ Route::get("movies-likes/{id}", [MoviesRestController::class, "moviesLikes"]);
 
 Route::group(['middleware' => ['cors']], function () {
     Route::post("movies-likes", [MoviesRestController::class, "moviesStoreLikes"]);
+    Route::get("best-movies", [MoviesRestController::class, "bestMovies"]);
 });
 
 Route::get("movies-categories/{category}", [MoviesRestController::class, "moviesWithCategory"]);
