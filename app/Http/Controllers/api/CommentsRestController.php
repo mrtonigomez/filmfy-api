@@ -99,7 +99,7 @@ class CommentsRestController extends Controller
     public function movieComments($id)
     {
         $movie_comments = DB::table('comments as c')
-            ->select("m.title as movie ", "c.title", "c.body", "c.rating", "c.likes", "m.image", "c.created_at", "u.name as user")
+            ->select("m.title as movie ", "c.id", "c.title", "c.body", "c.rating", "c.likes", "m.image", "c.created_at", "u.name as user")
             ->leftJoin('movies as m','m.id' , '=', 'c.movies_id')
             ->join("users as u", "u.id", "=", "c.users_id")
             ->orderBy("c.updated_at", "DESC")
@@ -108,6 +108,14 @@ class CommentsRestController extends Controller
             ->get();
 
         return $movie_comments;
+    }
+
+    public function commentLike($comment_id) {
+        $comment = Comments::find($comment_id);
+        $comment->likes++;
+        $comment->save();
+
+        return $comment;
     }
 
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\api\CommentsRestController;
 use App\Http\Controllers\api\ListsRestController;
 use App\Http\Controllers\api\MoviesRestController;
+use App\Http\Controllers\api\UsersRestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::apiResource("users", UsersRestController::class);
 
 Route::apiResource("movies",MoviesRestController::class);
 Route::get("movies-actors/{id}", [MoviesRestController::class, "moviesActor"]);
@@ -48,5 +51,5 @@ Route::apiResource("comments",CommentsRestController::class);
 Route::get("comments-movie/{id}", [CommentsRestController::class, "movieComments"]);
 Route::get("comments-recent", [CommentsRestController::class, "recentComments"]);
 Route::post("comments-store/{movie_id}", [CommentsRestController::class, "store"]);
-Route::post("comment-like", [CommentsRestController::class]);
+Route::get("comment-like/{comment_id}", [CommentsRestController::class, "commentLike"]);
 

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UsersRestController extends Controller
 {
@@ -27,7 +29,14 @@ class UsersRestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = [
+            "name" => $request->name,
+            "email" => $request->email,
+            "password" => Hash::make($request->password),
+        ];
+
+        DB::table("users")->insert($user);
+        return $user;
     }
 
     /**
