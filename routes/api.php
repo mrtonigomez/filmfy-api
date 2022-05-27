@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\CommentsRestController;
+use App\Http\Controllers\api\LikesRestController;
 use App\Http\Controllers\api\ListsRestController;
 use App\Http\Controllers\api\MoviesRestController;
 use Illuminate\Http\Request;
@@ -41,3 +42,8 @@ Route::apiResource("comments",CommentsRestController::class);
 Route::get("comments-movie/{id}", [CommentsRestController::class, "movieComments"]);
 Route::get("comments-recent", [CommentsRestController::class, "recentComments"]);
 Route::post("comments-store/{movie_id}", [CommentsRestController::class, "store"]);
+
+Route::post("movies-like/{movie_id}", [LikesRestController::class, "likeMovie"]);
+Route::delete("movies-unlike/{movie_id}", [LikesRestController::class, "unlikeMovie"]);
+Route::post("lists-like/{list_id}", [LikesRestController::class, "likeList"]);
+Route::delete("lists-unlink/{list_id}", [LikesRestController::class, "unlikeList"]);
