@@ -48,4 +48,5 @@ Route::apiResource("comments",CommentsRestController::class);
 Route::get("comments-movie/{id}", [CommentsRestController::class, "movieComments"]);
 Route::get("comments-recent", [CommentsRestController::class, "recentComments"]);
 Route::post("comments-store/{movie_id}", [CommentsRestController::class, "store"]);
+Route::post("comment-like", [CommentsRestController::class]);
 
