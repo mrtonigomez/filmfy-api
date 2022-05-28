@@ -143,8 +143,9 @@ class MoviesRestController extends Controller
     //Return movies related to a one category
     public function moviesWithCategory($category)
     {
+        $category_filter = str_replace('-', ' ', $category);
         $category_id = DB::table("categories")
-            ->where("name", "=", $category)
+            ->where("name", "=", $category_filter)
             ->value("id");
 
         $movies_categories = DB::table("movies as m")
@@ -188,5 +189,29 @@ class MoviesRestController extends Controller
             ->get();
 
         return $moviesAll;
+    }
+
+    public function moviesOnMoreLists() {
+        $movies = [];
+        $moviesSearch = DB::table("lists_movies as lm")
+            ->select("lm.movies_id", DB::raw("count(lm.movies_id) as count_movies"))
+            ->orderBy("count_movies", "DESC")
+            ->groupBy('lm.movies_id')
+            ->limit(10)
+            ->get();
+
+        foreach ($moviesSearch->toArray() as $movie) {
+            $movieFind = Movies::find($movie->movies_id);
+            $movieFinal = [
+                "id" => $movieFind->id,
+                "title" => $movieFind->title,
+                "likes" => count($movieFind->likes),
+                "image" => $movieFind->image,
+                "times_added" => $movie->count_movies
+            ];
+            array_push($movies, $movieFinal);
+        }
+
+        return $movies;
     }
 }
