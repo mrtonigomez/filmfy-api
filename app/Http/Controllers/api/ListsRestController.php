@@ -152,9 +152,10 @@ class ListsRestController extends Controller
 
         foreach ($listsAll as $key => $list) {
 
-            $m_imgs = Lists::moviesImgAtList($list->l_id);
+            $m_imgs = Lists::moviesInformation($list->l_id)[0];
+            $m_count = Lists::moviesInformation($list->l_id)[1];
             $list->m_imgs = $m_imgs;
-
+            $list->m_count = $m_count;
             array_push($recentLists, $list);
         }
 

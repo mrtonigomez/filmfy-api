@@ -34,6 +34,8 @@ Route::get("user-lists/{id}", [ListsRestController::class, "userLists"]);
 Route::post("add-movie-to-list", [ListsRestController::class, "addMoviesToList"]);
 Route::get("lists-recent", [ListsRestController::class, "recentLists"]);
 
+
+
 Route::apiResource("comments",CommentsRestController::class);
 Route::get("comments-movie/{id}", [CommentsRestController::class, "movieComments"]);
 Route::get("comments-recent", [CommentsRestController::class, "recentComments"]);
