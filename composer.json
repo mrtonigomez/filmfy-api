@@ -12,7 +12,7 @@
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "tymon/jwt-auth": "*"
+        "tymon/jwt-auth": "dev-develop"
     },
     "require-dev": {
         "backpack/generators": "^3.1",
