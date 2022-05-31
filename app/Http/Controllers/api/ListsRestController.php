@@ -168,7 +168,7 @@ class ListsRestController extends Controller
         $recentLists = [];
 
         $listsAll = DB::table("lists as l")
-            ->select('l.id as l_id',  'l.title as l_title', DB::raw('COUNT(ll.id) as l_likes') )
+            ->select('l.id as l_id',  'l.title as l_title', 'l.description as l_description', DB::raw('COUNT(ll.id) as l_likes') )
             ->leftJoin('lists_likes as ll', 'll.lists_id', '=', 'l.id')
             ->groupBy('l.id', 'l.title')
             ->orderBy("l.updated_at", "DESC")
