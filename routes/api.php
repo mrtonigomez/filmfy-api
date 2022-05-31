@@ -58,6 +58,9 @@ Route::get("movies-from-list/{id}", [ListsRestController::class, "moviesFromList
 Route::get("user-lists/{id}", [ListsRestController::class, "userLists"]);
 Route::post("add-movie-to-list", [ListsRestController::class, "addMoviesToList"]);
 Route::get("lists-recent", [ListsRestController::class, "recentLists"]);
+Route::get("lists-most-liked", [ListsRestController::class, "mostLikedLists"]);
+
+
 
 Route::apiResource("categories", \App\Http\Controllers\api\CategoriesRestController::class);
 
