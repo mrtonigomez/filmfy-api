@@ -203,7 +203,7 @@ class ListsRestController extends Controller
         $listsAll = DB::table("lists as l")
             ->select('l.id as l_id',  'l.title as l_title', 'l.description as l_description', DB::raw('COUNT(ll.id) as l_likes') )
             ->leftJoin('lists_likes as ll', 'll.lists_id', '=', 'l.id')
-            ->groupBy('l.id', 'l.title')
+            ->groupBy('l.id', 'l.title', 'l.description')
             ->orderBy("l_likes", "DESC")
             ->limit(10)
             ->get();
