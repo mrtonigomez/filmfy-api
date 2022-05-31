@@ -68,14 +68,25 @@ class ListsRestController extends Controller
     {
         $list = Lists::find($id);
 
+        $movies = Lists::moviesInformation($list->id)[0];
+        $m_count = Lists::moviesInformation($list->id)[1];
+        $user = Lists::userInformation($list->id);
+
+
+        foreach ($list->movies as $movie) {
+            $m_categories = Movies::returnExtraInformation($movie->id);
+            $movie["categories"] = $m_categories["categories"];
+        }
+
         $user_lists = [
             "id" => $list["id"],
-            "users_id" => $list["users_id"],
             "title" => $list["title"],
             "description" => $list["description"],
             "is_private" => $list["is_private"],
+            "user" => $user,
             "status" => $list["status"],
-            "movies" => $list->movies
+            "movies_count" => $m_count,
+            "movies" => $movies,
         ];
 
         return $user_lists;
