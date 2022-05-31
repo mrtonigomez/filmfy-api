@@ -44,7 +44,12 @@ class Lists extends Model
     }
 
     public static function userInformation($id) {
-        return Lists::find($id)->users;
+        $user_data = [];
+        $user = Lists::find($id)->users;
+        $user_data["name"] = $user["name"];
+        $user_data["profile_image"] = $user["profile_image"];
+
+        return $user_data;
     }
 
     /*
