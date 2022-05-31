@@ -125,10 +125,15 @@ class CommentsRestController extends Controller
             ->where("users_id", $request->user)
             ->count();
 
+
         if ($exist) {
-            return 1;
+            return $response = [
+                "status" => 1,
+            ];
         }else {
-            return 0;
+            return $response = [
+                "status" => 0,
+            ];
         }
 
 
