@@ -38,7 +38,7 @@ Route::prefix('v1')->group(function () {
         //Todo lo que este dentro de este grupo requiere verificación de usuario.
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('get-user', [AuthController::class, 'getUser']);
-	Route::post("movies-likes", [MoviesRestController::class, "moviesStoreLikes"]);
+	    Route::post("movies-likes", [MoviesRestController::class, "moviesStoreLikes"]);
         Route::post("add-movie-to-list", [ListsRestController::class, "addMoviesToList"]);
         Route::post("comments-store/{movie_id}", [CommentsRestController::class, "store"]);
     });
@@ -50,6 +50,7 @@ Route::get("movies-year/{year}", [MoviesRestController::class, "moviesYear"]);
 Route::post("find-movies", [MoviesRestController::class, "findMovies"]);
 Route::get("recent-movies", [MoviesRestController::class, "recentMovies"]);
 Route::get("best-movies", [MoviesRestController::class, "bestMovies"]);
+Route::get("movies-on-more-lists", [MoviesRestController::class, "moviesOnMoreLists"]);
 Route::get("movies-on-more-lists", [MoviesRestController::class, "moviesOnMoreLists"]);
 
 Route::apiResource("lists", ListsRestController::class);
@@ -64,4 +65,5 @@ Route::apiResource("comments",CommentsRestController::class);
 Route::get("comments-movie/{id}", [CommentsRestController::class, "movieComments"]);
 Route::get("comments-recent", [CommentsRestController::class, "recentComments"]);
 Route::get("comment-like/{comment_id}", [CommentsRestController::class, "commentLike"]);
+Route::post("user-had-comment", [CommentsRestController::class, "userHadComment"]);
 

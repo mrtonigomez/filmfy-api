@@ -118,4 +118,21 @@ class CommentsRestController extends Controller
         return $comment;
     }
 
+    public function userHadComment(Request $request){
+        $exist = DB::table("comments")
+            ->select("*")
+            ->where("movies_id", $request->movie)
+            ->where("users_id", $request->user)
+            ->count();
+
+        if ($exist) {
+            return 1;
+        }else {
+            return 0;
+        }
+
+
+
+    }
+
 }
