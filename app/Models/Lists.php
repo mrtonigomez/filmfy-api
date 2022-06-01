@@ -30,15 +30,26 @@ class Lists extends Model
     |--------------------------------------------------------------------------
     */
 
-    public static function moviesImgAtList($id) {
-        $movies_img = [];
+    public static function moviesInformation($id) {
+        $movies_info = [];
+        $movies_count = 0;
 
         $moviesObject = Lists::find($id)->movies;
         foreach ($moviesObject as $movie) {
-            array_push($movies_img, $movie->image);
+            array_push($movies_info, $movie);
+            $movies_count++;
         }
 
-        return $movies_img;
+        return [$movies_info, $movies_count];
+    }
+
+    public static function userInformation($id) {
+        $user_data = [];
+        $user = Lists::find($id)->users;
+        $user_data["name"] = $user["name"];
+        $user_data["profile_image"] = $user["profile_image"];
+
+        return $user_data;
     }
 
     /*

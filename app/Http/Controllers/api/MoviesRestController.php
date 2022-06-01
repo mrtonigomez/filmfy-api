@@ -158,6 +158,30 @@ class MoviesRestController extends Controller
         return $movies_categories;
     }
 
+    public function moviesOnMoreLists() {
+        $movies = [];
+        $moviesSearch = DB::table("lists_movies as lm")
+            ->select("lm.movies_id", DB::raw("count(lm.movies_id) as count_movies"))
+            ->orderBy("count_movies", "DESC")
+            ->groupBy('lm.movies_id')
+            ->limit(10)
+            ->get();
+
+        foreach ($moviesSearch->toArray() as $movie) {
+            $movieFind = Movies::find($movie->movies_id);
+            $movieFinal = [
+                "id" => $movieFind->id,
+                "title" => $movieFind->title,
+                "likes" => count($movieFind->likes),
+                "image" => $movieFind->image,
+                "times_added" => $movie->count_movies
+            ];
+            array_push($movies, $movieFinal);
+        }
+
+        return $movies;
+    }
+
     public function moviesYear($year)
     {
         $allMovie = [];
@@ -191,27 +215,23 @@ class MoviesRestController extends Controller
         return $moviesAll;
     }
 
-    public function moviesOnMoreLists() {
-        $movies = [];
-        $moviesSearch = DB::table("lists_movies as lm")
-            ->select("lm.movies_id", DB::raw("count(lm.movies_id) as count_movies"))
-            ->orderBy("count_movies", "DESC")
-            ->groupBy('lm.movies_id')
-            ->limit(10)
-            ->get();
+    public function userHadLikeMovie(Request $request){
 
-        foreach ($moviesSearch->toArray() as $movie) {
-            $movieFind = Movies::find($movie->movies_id);
-            $movieFinal = [
-                "id" => $movieFind->id,
-                "title" => $movieFind->title,
-                "likes" => count($movieFind->likes),
-                "image" => $movieFind->image,
-                "times_added" => $movie->count_movies
+        $exist = DB::table("movies_likes")
+            ->select("*")
+            ->where("movies_id", $request->movie)
+            ->where("users_id", $request->user)
+            ->count();
+
+
+        if ($exist) {
+            return $response = [
+                "status" => 1,
             ];
-            array_push($movies, $movieFinal);
+        }else {
+            return $response = [
+                "status" => 0,
+            ];
         }
-
-        return $movies;
     }
 }

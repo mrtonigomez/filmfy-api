@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use JWTAuth;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -114,7 +114,7 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Invalid token / token expired',
             ], 401);
-        //Devolvemos los datos del usuario si todo va bien.
+        //Devolvemos los datos del usuario si todo va bien. 
         return response()->json(['user' => $user]);
     }
 }
