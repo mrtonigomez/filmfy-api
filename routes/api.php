@@ -26,10 +26,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource("users", UsersRestController::class);
 
-Route::apiResource("movies",MoviesRestController::class);
-Route::get("movies-actors/{id}", [MoviesRestController::class, "moviesActor"]);
-Route::get("movies-likes/{id}", [MoviesRestController::class, "moviesLikes"]);
-
 Route::prefix('v1')->group(function () {
     //Prefijo V1, todo lo que este dentro de este grupo se accedera escribiendo v1 en el navegador, es decir /api/v1/*
     Route::post('login', [AuthController::class, 'authenticate']);
@@ -45,18 +41,21 @@ Route::prefix('v1')->group(function () {
 });
 
 
+Route::apiResource("movies",MoviesRestController::class);
+Route::get("movies-actors/{id}", [MoviesRestController::class, "moviesActor"]);
+Route::get("movies-likes/{id}", [MoviesRestController::class, "moviesLikes"]);
 Route::get("movies-categories/{category}", [MoviesRestController::class, "moviesWithCategory"]);
 Route::get("movies-year/{year}", [MoviesRestController::class, "moviesYear"]);
 Route::post("find-movies", [MoviesRestController::class, "findMovies"]);
 Route::get("recent-movies", [MoviesRestController::class, "recentMovies"]);
 Route::get("best-movies", [MoviesRestController::class, "bestMovies"]);
 Route::get("movies-on-more-lists", [MoviesRestController::class, "moviesOnMoreLists"]);
-Route::get("movies-on-more-lists", [MoviesRestController::class, "moviesOnMoreLists"]);
 Route::post("user-had-like-movie", [MoviesRestController::class, "userHadLikeMovie"]);
 
 Route::apiResource("lists", ListsRestController::class);
 Route::get("movies-from-list/{id}", [ListsRestController::class, "moviesFromList"]);
 Route::get("user-lists/{id}", [ListsRestController::class, "userLists"]);
+Route::post("create-list", [ListsRestController::class, "createList"]);
 Route::post("add-movie-to-list", [ListsRestController::class, "addMoviesToList"]);
 Route::get("lists-recent", [ListsRestController::class, "recentLists"]);
 Route::get("lists-most-liked", [ListsRestController::class, "mostLikedLists"]);

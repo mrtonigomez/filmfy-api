@@ -133,23 +133,30 @@ class ListsRestController extends Controller
     public function userLists($idUser)
     {
         $lists = Lists::all();
+        $user_lists = [];
 
         foreach ($lists->toArray() as $key => $list) {
 
             $moviesList = DB::table("movies as m")
+                ->select("m.*")
                 ->join("lists_movies as lm", "lm.movies_id", "=", "m.id")
                 ->where("lists_id", "=", $list["id"])
                 ->get();
 
             if ($list["users_id"] == $idUser) {
-                $user_lists[$key] = [
+                $listUser = [
                     "id" => $list["id"],
                     "title" => $list["title"],
                     "movies" => $moviesList
                 ];
+                array_push($user_lists, $listUser);
             }
         }
         return $user_lists;
+    }
+
+    public function createList(Request $request) {
+
     }
 
     public function addMoviesToList(Request $request) {
