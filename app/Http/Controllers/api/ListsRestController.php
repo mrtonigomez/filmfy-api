@@ -187,6 +187,36 @@ class ListsRestController extends Controller
 
     }
 
+    public function updateList(Request $request)
+    {
+        $dataList = [
+            "users_id" => $request->users_id,
+            "title" => $request->title,
+            "description" => $request->description,
+            "is_private" => 0,
+            "status" => 1,
+        ];
+
+        DB::table("lists")
+            ->where("id", "=", $request->id)
+            ->update($dataList);
+
+        $list = Lists::find($request->id);
+
+        $moviesList = DB::table("lists_movies")
+            ->select("*")
+            ->where("lists_id", "=", $request->id)
+            ->delete();
+
+        foreach ($request->movies as $movie) {
+            $dataMovie = [
+                "lists_id" => $list["id"],
+                "movies_id" => $movie["id"]
+            ];
+            DB::table("lists_movies")->insert($dataMovie);
+        }
+    }
+
     public function addMoviesToList(Request $request)
     {
 
