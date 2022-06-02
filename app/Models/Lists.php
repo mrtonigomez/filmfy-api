@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Lists extends Model
 {
@@ -50,6 +51,15 @@ class Lists extends Model
         $user_data["profile_image"] = $user["profile_image"];
 
         return $user_data;
+    }
+
+    public static function listLikes($id) {
+
+         return DB::table("lists as l")
+             ->select(DB::raw('COUNT(ll.id) as count') )
+             ->leftJoin('lists_likes as ll', 'll.lists_id', '=', 'l.id')
+             ->where('l.id', '=', $id)
+             ->first();
     }
 
     /*

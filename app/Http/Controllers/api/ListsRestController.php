@@ -71,6 +71,7 @@ class ListsRestController extends Controller
         $movies = Lists::moviesInformation($list->id)[0];
         $m_count = Lists::moviesInformation($list->id)[1];
         $user = Lists::userInformation($list->id);
+        $likes = Lists::listLikes($list->id);
 
 
         foreach ($list->movies as $movie) {
@@ -85,6 +86,9 @@ class ListsRestController extends Controller
             "is_private" => $list["is_private"],
             "user" => $user,
             "status" => $list["status"],
+            "likes" => $likes->count,
+            "created_at" => $list["created_at"],
+            "updated_at" => $list["updated_at"],
             "movies_count" => $m_count,
             "movies" => $movies,
         ];
