@@ -39,7 +39,10 @@ class Lists extends Model
         foreach ($moviesObject as $movie) {
             array_push($movies_info, $movie);
             $movies_count++;
-        }
+
+            $m_categories = Movies::returnExtraInformation($movie->id);
+            $movie["categories"] = $m_categories["categories"];
+            }
 
         return [$movies_info, $movies_count];
     }

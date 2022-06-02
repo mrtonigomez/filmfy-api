@@ -74,11 +74,6 @@ class ListsRestController extends Controller
         $likes = Lists::listLikes($list->id);
 
 
-        foreach ($list->movies as $movie) {
-            $m_categories = Movies::returnExtraInformation($movie->id);
-            $movie["categories"] = $m_categories["categories"];
-        }
-
         $user_lists = [
             "id" => $list["id"],
             "title" => $list["title"],
@@ -92,6 +87,7 @@ class ListsRestController extends Controller
             "movies_count" => $m_count,
             "movies" => $movies,
         ];
+
 
         return $user_lists;
     }
