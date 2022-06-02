@@ -65,7 +65,7 @@ class MoviesSeeder extends Seeder
 //        /** Opening CSV data
 //         * Title, release_date, runtime, genre/s, categories_id, description, image, trailer, actors, director, writers
 //         */
-//        $csvFile = fopen(base_path("database/resources/top-movies-data.csv"), "r");
+//        $csvFile = fopen(base_path("database/resources/movies-june22.csv"), "r");
 //
 //        // Ignoring first line and creating all movies first
 //        $firstline = true;
