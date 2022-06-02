@@ -20,7 +20,7 @@ class ListsRestController extends Controller
         $allLists = [];
 
         $listsAll = DB::table("lists as l")
-            ->select('l.id as l_id',  'l.title as l_title', DB::raw('COUNT(ll.id) as l_likes') )
+            ->select('l.id as l_id', 'l.title as l_title', DB::raw('COUNT(ll.id) as l_likes'))
             ->leftJoin('lists_likes as ll', 'll.lists_id', '=', 'l.id')
             ->groupBy('l.id', 'l.title')
             ->orderBy("l.updated_at", "DESC")
@@ -137,26 +137,58 @@ class ListsRestController extends Controller
     public function userLists($idUser)
     {
         $lists = Lists::all();
+        $user_lists = [];
 
         foreach ($lists->toArray() as $key => $list) {
 
             $moviesList = DB::table("movies as m")
+                ->select("m.*")
                 ->join("lists_movies as lm", "lm.movies_id", "=", "m.id")
                 ->where("lists_id", "=", $list["id"])
                 ->get();
 
             if ($list["users_id"] == $idUser) {
-                $user_lists[$key] = [
+                $listUser = [
                     "id" => $list["id"],
                     "title" => $list["title"],
                     "movies" => $moviesList
                 ];
+                array_push($user_lists, $listUser);
             }
         }
         return $user_lists;
     }
 
-    public function addMoviesToList(Request $request) {
+    public function createList(Request $request)
+    {
+
+        $dataList = [
+            "users_id" => $request->users_id,
+            "title" => $request->title,
+            "description" => $request->description,
+            "is_private" => 0,
+            "status" => 1,
+        ];
+
+        DB::table("lists")->insert($dataList);
+        $list = DB::table("lists")
+            ->select("id")
+            ->where("title", $request->title)
+            ->get();
+
+        foreach ($request->movies as $movie) {
+            $dataMovie = [
+                "lists_id" => $list[0]->id,
+                "movies_id" => $movie["id"]
+            ];
+            DB::table("lists_movies")->insert($dataMovie);
+        }
+
+
+    }
+
+    public function addMoviesToList(Request $request)
+    {
 
         $data = [
             "lists_id" => $request->lists_id,
@@ -166,7 +198,7 @@ class ListsRestController extends Controller
         $moviesInList = Lists::find($request->lists_id)->movies;
 
         foreach ($moviesInList as $movie) {
-            if ($movie->id == $request->movies_id){
+            if ($movie->id == $request->movies_id) {
                 return "La película ya se ha introducido";
             }
         }
@@ -178,12 +210,13 @@ class ListsRestController extends Controller
 
     }
 
-    public function recentLists() {
+    public function recentLists()
+    {
 
         $recentLists = [];
 
         $listsAll = DB::table("lists as l")
-            ->select('l.id as l_id',  'l.title as l_title', 'l.description as l_description', DB::raw('COUNT(ll.id) as l_likes') )
+            ->select('l.id as l_id', 'l.title as l_title', 'l.description as l_description', DB::raw('COUNT(ll.id) as l_likes'))
             ->leftJoin('lists_likes as ll', 'll.lists_id', '=', 'l.id')
             ->groupBy('l.id', 'l.title', 'l.description')
             ->orderBy("l.updated_at", "DESC")
@@ -211,12 +244,13 @@ class ListsRestController extends Controller
         return $recentLists;
     }
 
-    public function mostLikedLists() {
+    public function mostLikedLists()
+    {
 
         $mostLikedLists = [];
 
         $listsAll = DB::table("lists as l")
-            ->select('l.id as l_id',  'l.title as l_title', 'l.description as l_description', DB::raw('COUNT(ll.id) as l_likes') )
+            ->select('l.id as l_id', 'l.title as l_title', 'l.description as l_description', DB::raw('COUNT(ll.id) as l_likes'))
             ->leftJoin('lists_likes as ll', 'll.lists_id', '=', 'l.id')
             ->groupBy('l.id', 'l.title', 'l.description')
             ->orderBy("l_likes", "DESC")
