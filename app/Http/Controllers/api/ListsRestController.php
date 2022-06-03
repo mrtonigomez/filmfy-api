@@ -142,6 +142,7 @@ class ListsRestController extends Controller
                 ->where("lists_id", "=", $list["id"])
                 ->get();
 
+
             if ($list["users_id"] == $idUser && $list["status"] !== 0) {
                 $m_count = Lists::moviesInformation($list["id"]);
                 $likes = Lists::listLikes($list["id"]);
