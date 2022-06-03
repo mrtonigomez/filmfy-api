@@ -60,6 +60,7 @@ class UsersRestController extends Controller
      */
     public function update(Request $request)
     {
+        dd($request);
         DB::table('users')
             ->where('id','=', $request->id)
             ->update([
