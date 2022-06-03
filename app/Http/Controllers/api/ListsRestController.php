@@ -147,7 +147,7 @@ class ListsRestController extends Controller
                 ->where("lists_id", "=", $list["id"])
                 ->get();
 
-            if ($list["users_id"] == $idUser) {
+            if ($list["users_id"] == $idUser && $list["status"] !== 0) {
                 $listUser = [
                     "id" => $list["id"],
                     "title" => $list["title"],
