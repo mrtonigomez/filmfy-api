@@ -48,7 +48,7 @@ class AuthController extends Controller
         //Validaciones
         $validator = Validator::make($credentials, [
             'email' => 'required|email',
-            'password' => 'required|string|min:6|max:50'
+            'password' => 'required|string'
         ]);
         //Devolvemos un error de validación en caso de fallo en las verificaciones
         if ($validator->fails()) {
@@ -114,7 +114,7 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Invalid token / token expired',
             ], 401);
-        //Devolvemos los datos del usuario si todo va bien. 
+        //Devolvemos los datos del usuario si todo va bien.
         return response()->json(['user' => $user]);
     }
 }
