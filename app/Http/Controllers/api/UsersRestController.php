@@ -60,13 +60,15 @@ class UsersRestController extends Controller
      */
     public function update(Request $request)
     {
-        return DB::table('users')
+        DB::table('users')
             ->where('id','=', $request->id)
             ->update([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => $request->password,
             ]);
+
+        dump(User::find($request->id));
 
     }
 
