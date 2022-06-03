@@ -90,24 +90,24 @@ class CommentsRestController extends Controller
         ->orderBy("created_at", "DESC")
         ->get();
 
-        foreach ($comments->toArray() as $key => $comment) {
+        foreach ($comments as $key => $comment) {
 
             $movie = DB::table("movies as m")
                 ->select('*')
-                ->where("id", "=", $comment["movies_id"])
+                ->where("id", "=", $comment->movies_id)
                 ->get();
 
 
-            if ($comment["users_id"] == $user_id) {
+            if ($comment->users_id == $user_id) {
                 $user_comments[$key] = [
-                    "id" => $comment["id"],
-                    "title" => $comment["title"],
-                    "body" => $comment["body"],
-                    "rating" => $comment["rating"],
-                    "likes" => $comment["likes"],
+                    "id" => $comment->id,
+                    "title" => $comment->title,
+                    "body" => $comment->body,
+                    "rating" => $comment->rating,
+                    "likes" => $comment->likes,
                     "movie" => $movie,
-                    "created_at" => $comment["created_at"],
-                    "updated_at" => $comment["updated_at"],
+                    "created_at" => $comment->created_at,
+                    "updated_at" => $comment->updated_at,
                 ];
             }
         }
