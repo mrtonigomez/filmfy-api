@@ -133,23 +133,25 @@ class ListsRestController extends Controller
     public function userLists($idUser)
     {
         $lists = Lists::all();
-        $user_lists = [];
 
         foreach ($lists->toArray() as $key => $list) {
 
             $moviesList = DB::table("movies as m")
-                ->select("m.*")
                 ->join("lists_movies as lm", "lm.movies_id", "=", "m.id")
                 ->where("lists_id", "=", $list["id"])
                 ->get();
 
+
             if ($list["users_id"] == $idUser) {
-                $listUser = [
+                $m_count = Lists::moviesInformation($list["id"]);
+                $likes = Lists::listLikes($list["id"]);
+                $user_lists[$key] = [
                     "id" => $list["id"],
                     "title" => $list["title"],
-                    "movies" => $moviesList
+                    "list_likes" => $likes->count,
+                    "movies_count" => $m_count[1],
+                    "movies" => $moviesList,
                 ];
-                array_push($user_lists, $listUser);
             }
         }
         return $user_lists;
@@ -194,7 +196,7 @@ class ListsRestController extends Controller
         $moviesInList = Lists::find($request->lists_id)->movies;
 
         foreach ($moviesInList as $movie) {
-            if ($movie->id == $request->movies_id) {
+            if ($movie->id == $request->movies_id){
                 return "La película ya se ha introducido";
             }
         }
@@ -206,13 +208,12 @@ class ListsRestController extends Controller
 
     }
 
-    public function recentLists()
-    {
+    public function recentLists() {
 
         $recentLists = [];
 
         $listsAll = DB::table("lists as l")
-            ->select('l.id as l_id', 'l.title as l_title', 'l.description as l_description', DB::raw('COUNT(ll.id) as l_likes'))
+            ->select('l.id as l_id',  'l.title as l_title', 'l.description as l_description', DB::raw('COUNT(ll.id) as l_likes') )
             ->leftJoin('lists_likes as ll', 'll.lists_id', '=', 'l.id')
             ->groupBy('l.id', 'l.title', 'l.description')
             ->orderBy("l.updated_at", "DESC")
