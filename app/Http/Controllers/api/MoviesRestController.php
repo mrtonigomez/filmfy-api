@@ -214,4 +214,24 @@ class MoviesRestController extends Controller
 
         return $moviesAll;
     }
+
+    public function userHadLikeMovie(Request $request){
+
+        $exist = DB::table("movies_likes")
+            ->select("*")
+            ->where("movies_id", $request->movie)
+            ->where("users_id", $request->user)
+            ->count();
+
+
+        if ($exist) {
+            return $response = [
+                "status" => 1,
+            ];
+        }else {
+            return $response = [
+                "status" => 0,
+            ];
+        }
+    }
 }
