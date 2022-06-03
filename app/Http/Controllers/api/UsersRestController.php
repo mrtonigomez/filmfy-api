@@ -58,9 +58,9 @@ class UsersRestController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $user_id)
     {
-        return User::where('id', $id)
+        return User::where('id', $user_id)
         ->update([
             'name' => $request->name,
             'email' => $request->email,

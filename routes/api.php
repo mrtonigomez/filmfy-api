@@ -37,6 +37,7 @@ Route::prefix('v1')->group(function () {
 	    Route::post("movies-likes", [MoviesRestController::class, "moviesStoreLikes"]);
         Route::post("add-movie-to-list", [ListsRestController::class, "addMoviesToList"]);
         Route::post("comments-store/{movie_id}", [CommentsRestController::class, "store"]);
+        Route::put('edit-user/{user_id}', [CommentsRestController::class, "update"]);
     });
 });
 
