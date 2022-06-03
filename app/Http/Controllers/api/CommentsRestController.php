@@ -83,6 +83,35 @@ class CommentsRestController extends Controller
         //
     }
 
+
+    public function userComments($user_id)
+    {
+        $comments = Comments::all();
+
+        foreach ($comments->toArray() as $key => $comment) {
+
+            $movie = DB::table("movies as m")
+                ->select('*')
+                ->where("id", "=", $comment["movies_id"])
+                ->get();
+
+
+            if ($comment["users_id"] == $user_id) {
+                $user_comments[$key] = [
+                    "id" => $comment["id"],
+                    "title" => $comment["title"],
+                    "body" => $comment["body"],
+                    "rating" => $comment["rating"],
+                    "likes" => $comment["likes"],
+                    "movie" => $movie,
+                    "created_at" => $comment["created_at"],
+                    "updated_at" => $comment["updated_at"],
+                ];
+            }
+        }
+        return $user_comments;
+    }
+
     public function recentComments()
     {
         $comments = DB::table("comments as c")
