@@ -86,7 +86,9 @@ class CommentsRestController extends Controller
 
     public function userComments($user_id)
     {
-        $comments = Comments::all();
+        $comments = DB::table("comments")
+        ->orderBy("created_at", "DESC")
+        ->get();
 
         foreach ($comments->toArray() as $key => $comment) {
 
