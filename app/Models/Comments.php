@@ -20,9 +20,10 @@ class Comments extends Model
     // public $timestamps = false;
     protected $guarded = ['id'];
     protected $fillable = ["movies_id", "users_id", 'title', 'body', 'moderated',
-        'status', 'likes'];
+        'status', 'likes', 'rating'];
     // protected $hidden = [];
     // protected $dates = [];
+
 
     /*
     |--------------------------------------------------------------------------

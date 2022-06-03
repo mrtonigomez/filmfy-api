@@ -47,8 +47,7 @@ class CommentsCrudController extends CrudController
         CRUD::column('moderated');
         CRUD::column('status');
         CRUD::column('likes');
-        CRUD::column('created_at');
-        CRUD::column('updated_at');
+        CRUD::column('rating')->name("rating")->label("Ratings");
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -67,6 +66,7 @@ class CommentsCrudController extends CrudController
         CRUD::column('moderated');
         CRUD::column('status');
         CRUD::column('likes');
+        CRUD::column('rating')->name("rating");;
         CRUD::column('created_at');
         CRUD::column('updated_at');
     }
@@ -110,12 +110,13 @@ class CommentsCrudController extends CrudController
             'name' => 'body',
             'label' => 'Body',
 
-            'type' => 'summernote', // foreign key attribute that is shown to user
+            'type' => 'text', // foreign key attribute that is shown to user
 
         ]);
         CRUD::field('moderated');
         CRUD::field('status');
         CRUD::field('likes');
+        CRUD::field('rating')->type("text")->name("rating");;
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

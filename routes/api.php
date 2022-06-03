@@ -37,6 +37,7 @@ Route::prefix('v1')->group(function () {
 	    Route::post("movies-likes", [MoviesRestController::class, "moviesStoreLikes"]);
         Route::post("add-movie-to-list", [ListsRestController::class, "addMoviesToList"]);
         Route::post("comments-store/{movie_id}", [CommentsRestController::class, "store"]);
+
     });
 });
 
@@ -50,14 +51,16 @@ Route::post("find-movies", [MoviesRestController::class, "findMovies"]);
 Route::get("recent-movies", [MoviesRestController::class, "recentMovies"]);
 Route::get("best-movies", [MoviesRestController::class, "bestMovies"]);
 Route::get("movies-on-more-lists", [MoviesRestController::class, "moviesOnMoreLists"]);
+Route::get("upcomming-movies", [MoviesRestController::class, "upcommingMovies"]);
 Route::post("user-had-like-movie", [MoviesRestController::class, "userHadLikeMovie"]);
 
 Route::apiResource("lists", ListsRestController::class);
 Route::get("movies-from-list/{id}", [ListsRestController::class, "moviesFromList"]);
 Route::get("user-lists/{id}", [ListsRestController::class, "userLists"]);
-Route::post("create-list", [ListsRestController::class, "createList"]);
 Route::get("lists-recent", [ListsRestController::class, "recentLists"]);
 Route::get("lists-most-liked", [ListsRestController::class, "mostLikedLists"]);
+Route::post("create-list", [ListsRestController::class, "createList"]);
+Route::put("edit-list", [ListsRestController::class, "updateList"]);
 
 Route::apiResource("categories", \App\Http\Controllers\api\CategoriesRestController::class);
 

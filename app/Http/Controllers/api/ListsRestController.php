@@ -133,6 +133,7 @@ class ListsRestController extends Controller
     public function userLists($idUser)
     {
         $lists = Lists::all();
+        $user_lists = [];
 
         foreach ($lists->toArray() as $key => $list) {
 
@@ -141,17 +142,17 @@ class ListsRestController extends Controller
                 ->where("lists_id", "=", $list["id"])
                 ->get();
 
-
-            if ($list["users_id"] == $idUser) {
+            if ($list["users_id"] == $idUser && $list["status"] !== 0) {
                 $m_count = Lists::moviesInformation($list["id"]);
                 $likes = Lists::listLikes($list["id"]);
-                $user_lists[$key] = [
+                $listUser = [
                     "id" => $list["id"],
                     "title" => $list["title"],
                     "list_likes" => $likes->count,
                     "movies_count" => $m_count[1],
                     "movies" => $moviesList,
                 ];
+                array_push($user_lists, $listUser);
             }
         }
         return $user_lists;
@@ -183,6 +184,36 @@ class ListsRestController extends Controller
         }
 
 
+    }
+
+    public function updateList(Request $request)
+    {
+        $dataList = [
+            "users_id" => $request->users_id,
+            "title" => $request->title,
+            "description" => $request->description,
+            "is_private" => 0,
+            "status" => 1,
+        ];
+
+        DB::table("lists")
+            ->where("id", "=", $request->id)
+            ->update($dataList);
+
+        $list = Lists::find($request->id);
+
+        $moviesList = DB::table("lists_movies")
+            ->select("*")
+            ->where("lists_id", "=", $request->id)
+            ->delete();
+
+        foreach ($request->movies as $movie) {
+            $dataMovie = [
+                "lists_id" => $list["id"],
+                "movies_id" => $movie["id"]
+            ];
+            DB::table("lists_movies")->insert($dataMovie);
+        }
     }
 
     public function addMoviesToList(Request $request)
