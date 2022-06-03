@@ -60,8 +60,7 @@ class UsersRestController extends Controller
      */
     public function update(Request $request)
     {
-        dd($request);
-        DB::table('users')
+        return DB::table('users')
             ->where('id','=', $request->id)
             ->update([
                 'name' => $request->name,
@@ -69,7 +68,6 @@ class UsersRestController extends Controller
                 'password' => $request->password,
             ]);
 
-        dump(User::find($request->id));
 
     }
 
