@@ -86,9 +86,8 @@ class CommentsRestController extends Controller
 
     public function userComments($user_id)
     {
-        $comments = DB::table("comments")
-        ->orderBy("created_at", "DESC")
-        ->get();
+        $comments = Comments::all();
+        $user_comments = [];
 
         foreach ($comments as $key => $comment) {
 
@@ -111,7 +110,11 @@ class CommentsRestController extends Controller
                 ];
             }
         }
-        return $user_comments;
+        if ($user_comments) {
+            return $user_comments;
+        }else {
+            return "";
+        }
     }
 
     public function recentComments()
