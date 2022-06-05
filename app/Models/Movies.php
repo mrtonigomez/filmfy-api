@@ -102,6 +102,14 @@ class Movies extends Model
         return $this->belongsToMany(Entities::class);
     }
 
+    public function entitiesDirectors() {
+        return $this->belongsToMany(Entities::class);
+    }
+
+    public function entitiesWritters() {
+        return $this->belongsToMany(Entities::class);
+    }
+
     public function list(){
         return $this->belongsToMany(Lists::class);
     }
@@ -131,4 +139,15 @@ class Movies extends Model
     | MUTATORS
     |--------------------------------------------------------------------------
     */
+
+    public function setImageAttribute($value)
+    {
+        $attribute_name = "image";
+        $disk = "public";
+        $destination_path = "/movie_images";
+
+        $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
+
+        // return $this->attributes[{$attribute_name}]; // uncomment if this is a translatable field
+    }
 }

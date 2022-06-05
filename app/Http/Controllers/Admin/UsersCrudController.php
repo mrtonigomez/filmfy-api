@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\UsersRequest;
+use App\Models\User;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * Class UsersCrudController
@@ -29,6 +31,10 @@ class UsersCrudController extends CrudController
         CRUD::setModel(\App\Models\User::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/users');
         CRUD::setEntityNameStrings('users', 'users');
+
+        User::saving(function ($entry) {
+            $entry->password = Hash::make($entry->password);
+        });
     }
 
     /**
@@ -42,9 +48,8 @@ class UsersCrudController extends CrudController
         CRUD::column('id');
         CRUD::column('name');
         CRUD::column('email');
-        CRUD::column('email_verified_at');
         CRUD::column('password');
-        CRUD::column('remember_token');
+        CRUD::column('role');
         CRUD::column('created_at');
         CRUD::column('updated_at');
 
@@ -57,7 +62,7 @@ class UsersCrudController extends CrudController
 
     protected function setupShowOperation()
     {
-            CRUD::column('id');
+        CRUD::column('id');
         CRUD::column('name');
         CRUD::column('email');
         CRUD::column('email_verified_at');
@@ -65,14 +70,6 @@ class UsersCrudController extends CrudController
         CRUD::column('remember_token');
         CRUD::column('created_at');
         CRUD::column('updated_at');
-        $this->crud->addColumn([
-            // n-n relationship (with pivot table)
-            'label'     => 'Lists', // Table column heading
-            'type'      => 'select',
-            'name'      => 'lists', // the method that defines the relationship in your Model
-            'attribute' => 'title', // foreign key attribute that is shown to user
-            'model'     => 'App\Models\Lists', // foreign key model
-        ])->limit(2000);
     }
 
     /**

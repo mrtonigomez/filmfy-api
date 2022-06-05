@@ -8,6 +8,7 @@ use App\Models\Entities;
 use App\Models\Movies;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use http\Env\Request;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -33,6 +34,71 @@ class MoviesCrudController extends CrudController
         CRUD::setModel(\App\Models\Movies::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/movies');
         CRUD::setEntityNameStrings('movies', 'movies');
+
+
+    }
+
+    public function store()
+    {
+        $request = $this->crud->getRequest();
+        $request->file("image")->store("movie_images", "public");
+
+        $image = "/movie_images/" .$request->file("image")->hashName();
+
+        $movie = [
+            "title" => $request->title,
+            "description" => $request->description,
+            "release_date" => $request->release_date,
+            "runtime" => $request->runtime,
+            "status" => $request->status,
+            "trailer" => $request->trailer,
+            "image" => $image
+        ];
+
+
+        DB::table("movies")->insert($movie);
+        $movie = DB::table("movies")
+            ->where("title", $request->title)
+            ->get();
+
+        foreach ($request->category as $category) {
+            $dataCategory = [
+                "categories_id" => $category,
+                "movies_id" => $movie[0]->id,
+            ];
+            DB::table("categories_movies")
+                ->insert($dataCategory);
+        }
+
+        foreach ($request->entities as $entity) {
+            $dataActors = [
+                "entities_id" => $entity,
+                "movies_id" => $movie[0]->id,
+            ];
+            DB::table("entities_movies")
+                ->insert($dataActors);
+        }
+
+        foreach ($request->entitiesDirectors as $entity) {
+            $dataActors = [
+                "entities_id" => $entity,
+                "movies_id" => $movie[0]->id,
+            ];
+            DB::table("entities_movies")
+                ->insert($dataActors);
+        }
+
+        foreach ($request->entitiesWritters as $entity) {
+            $dataActors = [
+                "entities_id" => $entity,
+                "movies_id" => $movie[0]->id,
+            ];
+            DB::table("entities_movies")
+                ->insert($dataActors);
+        }
+
+        return redirect("/admin");
+
     }
 
     /**
@@ -65,19 +131,19 @@ class MoviesCrudController extends CrudController
         CRUD::column('category');
         $this->crud->addColumn([
             // n-n relationship (with pivot table)
-            'label'     => 'Entities', // Table column heading
-            'type'      => 'select_multiple',
-            'name'      => 'entities', // the method that defines the relationship in your Model
+            'label' => 'Entities', // Table column heading
+            'type' => 'select_multiple',
+            'name' => 'entities', // the method that defines the relationship in your Model
             'attribute' => 'name', // foreign key attribute that is shown to user
-            'model'     => 'App\Models\Entities', // foreign key model
+            'model' => 'App\Models\Entities', // foreign key model
         ]);
         $this->crud->addColumn([
             // n-n relationship (with pivot table)
-            'label'     => 'Comments', // Table column heading
-            'type'      => 'select',
-            'name'      => 'comment', // the method that defines the relationship in your Model
+            'label' => 'Comments', // Table column heading
+            'type' => 'select',
+            'name' => 'comment', // the method that defines the relationship in your Model
             'attribute' => 'title', // foreign key attribute that is shown to user
-            'model'     => 'App\Models\Comments', // foreign key model
+            'model' => 'App\Models\Comments', // foreign key model
         ])->limit(10000);
     }
 
@@ -95,7 +161,12 @@ class MoviesCrudController extends CrudController
         CRUD::field('title')->tab("Información básica");
         CRUD::field('description')->tab("Información básica");
         CRUD::field('release_date')->tab("Información básica");
-        CRUD::field('image')->tab("Información básica");
+        $this->crud->addField([   // Upload
+            'name' => 'image',
+            'label' => 'Image',
+            'type' => 'upload',
+            'upload' => true,
+        ]);
         CRUD::field('runtime')->tab("Información básica");
         CRUD::field('status')->tab("Información básica");
         CRUD::field('trailer')->tab("Información básica");
@@ -109,8 +180,8 @@ class MoviesCrudController extends CrudController
             'model' => 'App\Models\Categories',
             'attribute' => 'name', // foreign key attribute that is shown to user
             'attributes' => [
-              'class' => 'form-select',
-              'multiple' => 'multiple'
+                'class' => 'form-select',
+                'multiple' => 'multiple'
             ],
             'pivot' => true,
             'multiple' => true,
@@ -118,7 +189,7 @@ class MoviesCrudController extends CrudController
 
         $this->crud->addField([
             'name' => 'entities',
-            'label' => 'Entities',
+            'label' => 'Actores',
             'type' => 'select_multiple',
             'tab' => 'Personas involucradas',
 
@@ -126,8 +197,44 @@ class MoviesCrudController extends CrudController
             'attribute' => 'name', // foreign key attribute that is shown to user
             'pivot' => true,
             'multiple' => true,
-            'options'   => (function ($query) {
-                return $query->orderBy('name', 'ASC')->get();
+            'options' => (function ($query) {
+                return $query
+                    ->where("roles_id", 1)
+                    ->orderBy('name', 'ASC')->get();
+            }), //  you can use this to filter the results show in the select
+        ]);
+
+        $this->crud->addField([
+            'name' => 'entitiesDirectors',
+            'label' => 'Directors',
+            'type' => 'select_multiple',
+            'tab' => 'Personas involucradas',
+
+            'model' => 'App\Models\Entities',
+            'attribute' => 'name', // foreign key attribute that is shown to user
+            'pivot' => true,
+            'multiple' => true,
+            'options' => (function ($query) {
+                return $query
+                    ->where("roles_id", 2)
+                    ->orderBy('name', 'ASC')->get();
+            }), //  you can use this to filter the results show in the select
+        ]);
+
+        $this->crud->addField([
+            'name' => 'entitiesWritters',
+            'label' => 'Escritores',
+            'type' => 'select_multiple',
+            'tab' => 'Personas involucradas',
+
+            'model' => 'App\Models\Entities',
+            'attribute' => 'name', // foreign key attribute that is shown to user
+            'pivot' => true,
+            'multiple' => true,
+            'options' => (function ($query) {
+                return $query
+                    ->where("roles_id", 3)
+                    ->orderBy('name', 'ASC')->get();
             }), //  you can use this to filter the results show in the select
         ]);
 

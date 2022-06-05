@@ -44,10 +44,12 @@ class CommentsCrudController extends CrudController
         CRUD::column('users_id');
         CRUD::column('title');
         CRUD::column('body');
-        CRUD::column('moderated');
         CRUD::column('status');
         CRUD::column('likes');
-        CRUD::column('rating')->name("rating")->label("Ratings");
+        $this->crud->addColumn([
+            "name" => "rating",
+            "label" => "Rating",
+        ]);
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -61,12 +63,11 @@ class CommentsCrudController extends CrudController
         CRUD::column('id');
         CRUD::column('movies_id');
         CRUD::column('users_id');
-        CRUD::column('title');
-        CRUD::column('body');
-        CRUD::column('moderated');
+        CRUD::column('title')->limit(10000);;
+        CRUD::column('body')->limit(10000);;
         CRUD::column('status');
+        CRUD::column('rating');
         CRUD::column('likes');
-        CRUD::column('rating')->name("rating");;
         CRUD::column('created_at');
         CRUD::column('updated_at');
     }
@@ -105,15 +106,14 @@ class CommentsCrudController extends CrudController
             })
 
         ]);
-        CRUD::field('title');
+        CRUD::field('title')->limit(10000);;
         $this->crud->addField([
             'name' => 'body',
             'label' => 'Body',
 
             'type' => 'text', // foreign key attribute that is shown to user
 
-        ]);
-        CRUD::field('moderated');
+        ])->limit(10000);;
         CRUD::field('status');
         CRUD::field('likes');
         CRUD::field('rating')->type("text")->name("rating");;

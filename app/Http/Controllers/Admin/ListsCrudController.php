@@ -45,7 +45,6 @@ class ListsCrudController extends CrudController
         CRUD::column('description');
         CRUD::column('is_private');
         CRUD::column('status');
-        CRUD::column('likes');
         CRUD::column('created_at');
         CRUD::column('updated_at');
 
@@ -64,7 +63,6 @@ class ListsCrudController extends CrudController
         CRUD::column('description')->limit(2000);
         CRUD::column('is_private');
         CRUD::column('status');
-        CRUD::column('likes');
         $this->crud->addColumn([
             // n-n relationship (with pivot table)
             'label'     => 'Movies', // Table column heading

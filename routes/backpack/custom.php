@@ -21,7 +21,6 @@ Route::group([
     Route::crud('countries', 'CountriesCrudController');
     Route::crud('movies', 'MoviesCrudController');
     Route::crud('comments', 'CommentsCrudController');
-    Route::crud('ratings', 'RatingsCrudController');
     Route::crud('lists', 'ListsCrudController');
     Route::crud('entities', 'EntitiesCrudController');
     Route::crud('roles', 'RolesCrudController');
