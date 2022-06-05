@@ -97,7 +97,7 @@ class MoviesCrudController extends CrudController
                 ->insert($dataActors);
         }
 
-        return redirect("/admin");
+        return redirect("/admin/movies");
 
     }
 
@@ -158,19 +158,9 @@ class MoviesCrudController extends CrudController
         CRUD::setValidation(MoviesRequest::class);
 
 
+
         CRUD::field('title')->tab("Información básica");
         CRUD::field('description')->tab("Información básica");
-        CRUD::field('release_date')->tab("Información básica");
-        $this->crud->addField([   // Upload
-            'name' => 'image',
-            'label' => 'Image',
-            'type' => 'upload',
-            'upload' => true,
-        ]);
-        CRUD::field('runtime')->tab("Información básica");
-        CRUD::field('status')->tab("Información básica");
-        CRUD::field('trailer')->tab("Información básica");
-
         $this->crud->addField([
             'name' => 'category',
             'label' => 'Category',
@@ -186,6 +176,19 @@ class MoviesCrudController extends CrudController
             'pivot' => true,
             'multiple' => true,
         ]);
+        CRUD::field('release_date')->tab("Información básica");
+
+        $this->crud->addField([   // Upload
+            'name' => 'image',
+            'label' => 'Image',
+            'type' => 'upload',
+            'upload' => true,
+            'tab' => 'Información básica'
+        ]);
+
+        CRUD::field('runtime')->tab("Información básica");
+        CRUD::field('status')->tab("Información básica");
+        CRUD::field('trailer')->tab("Información básica");
 
         $this->crud->addField([
             'name' => 'entities',
