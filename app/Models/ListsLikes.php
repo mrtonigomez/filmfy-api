@@ -35,6 +35,10 @@ class ListsLikes extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function lists() {
+        return $this->belongsTo(Lists::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

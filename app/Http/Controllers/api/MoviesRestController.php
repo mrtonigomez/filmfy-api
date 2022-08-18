@@ -3,71 +3,75 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\MoviesService;
 use App\Models\Entities;
 use App\Models\Movies;
+use App\Models\Page;
+use App\Services\PageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class MoviesRestController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    protected $_context;
+
+    public function __construct(MoviesService $context)
     {
-        $moviesAll = Movies::all();
-        $movies = [];
-
-        foreach ($moviesAll->toArray() as $key => $movie) {
-
-            $data = Movies::returnExtraInformation($movie["id"]);
-
-            $movie["categories"] = $data["categories"];
-            $movie["actors"] = $data["actors"];
-            $movie["directors"] = $data["directors"];
-            $movie["writters"] = $data["writters"];
-            $movie["comments"] = $data["comments"];
-            $movie["likes"] = $data["likes"];
-
-            array_push($movies, $movie);
-        }
-
-        return $movies;
+        $this->_context = $context;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
+    public function index()
+    {
+        $movies = Movies::with(["comment", "entities", "likes", "category"])->get();
+        $response = [];
+        foreach ($movies as $key => $movie) {
+            $response[$key] = [
+                "id" => $movie->id,
+                "title" => $movie->title,
+                "description" => $movie->description,
+                "release_date" => $movie->release_date,
+                "image" => $movie->image,
+                "runtime" => $movie->runtime,
+                "status" => $movie->status,
+                "trailer" => $movie->trailer,
+                "categories" => $movie->category->pluck("name"),
+                "actors" => $movie->entities->where("roles_id", 1)->pluck("name"),
+                "directors" => $movie->entities->where("roles_id", 2)->pluck("name"),
+                "writters" => $movie->entities->where("roles_id", 3)->pluck("name"),
+                "comments" => $movie->comment,
+                "likes" => $movie->likes->count(),
+            ];
+        }
+
+        return $response;
+    }
+
     public function store(Request $request)
     {
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $movie = Movies::find($id);
-        $data = Movies::returnExtraInformation($id);
+            $response = [
+                "id" => $movie->id,
+                "title" => $movie->title,
+                "description" => $movie->description,
+                "release_date" => $movie->release_date,
+                "image" => $movie->image,
+                "runtime" => $movie->runtime,
+                "status" => $movie->status,
+                "trailer" => $movie->trailer,
+                "categories" => $movie->category->pluck("name"),
+                "actors" => $movie->entities->where("roles_id", 1)->pluck("name"),
+                "directors" => $movie->entities->where("roles_id", 2)->pluck("name"),
+                "writters" => $movie->entities->where("roles_id", 3)->pluck("name"),
+                "comments" => $movie->comment,
+                "likes" => $movie->likes->count(),
+            ];
 
-
-        $movie["categories"] = $data["categories"];
-        $movie["actors"] = $data["actors"];
-        $movie["directors"] = $data["directors"];
-        $movie["writters"] = $data["writters"];
-        $movie["comments"] = $data["comments"];
-        $movie["likes"] = $data["likes"];
-
-        return $movie;
+        return $response;
     }
 
     /**
@@ -119,7 +123,7 @@ class MoviesRestController extends Controller
     public function bestMovies()
     {
         $movies_likes = DB::table("movies as m")
-            ->select("m.title", "m.id", "m.description", "m.image",  DB::raw("count(ml.id) as likes"))
+            ->select("m.title", "m.id", "m.description", "m.image", DB::raw("count(ml.id) as likes"))
             ->join("movies_likes as ml", "ml.movies_id", "=", "m.id", "left")
             ->orderBy("likes", "DESC")
             ->groupBy('m.id', "m.title", "m.description", "m.image")
@@ -149,7 +153,7 @@ class MoviesRestController extends Controller
             ->value("id");
 
         $movies_categories = DB::table("movies as m")
-            ->select('m.id', "m.title", "m.description", "m.image",  DB::raw("count(ml.id) as likes"))
+            ->select('m.id', "m.title", "m.description", "m.image", DB::raw("count(ml.id) as likes"))
             ->join("categories_movies as c", "m.id", "=", "c.movies_id")
             ->join("movies_likes as ml", "ml.movies_id", "=", "m.id", "left")
             ->where("c.categories_id", "=", $category_id)
@@ -158,7 +162,8 @@ class MoviesRestController extends Controller
         return $movies_categories;
     }
 
-    public function moviesOnMoreLists() {
+    public function moviesOnMoreLists()
+    {
         $movies = [];
         $moviesSearch = DB::table("lists_movies as lm")
             ->select("lm.movies_id", DB::raw("count(lm.movies_id) as count_movies"))
@@ -187,7 +192,7 @@ class MoviesRestController extends Controller
         $allMovie = [];
         for ($i = $year + 1; $i < ($year + 11); $i++) {
             $movies = DB::table("movies as m")
-                ->select("m.title", "m.id", "m.description", "m.image",  DB::raw("count(ml.id) as likes"))
+                ->select("m.title", "m.id", "m.description", "m.image", DB::raw("count(ml.id) as likes"))
                 ->where("release_date", "like", "%" . $i . "%")
                 ->join("movies_likes as ml", "ml.movies_id", "=", "m.id", "left")
                 ->groupBy('m.id', "m.title", "m.description", "m.image")
@@ -205,7 +210,7 @@ class MoviesRestController extends Controller
     public function recentMovies()
     {
         $moviesAll = DB::table("movies as m")
-            ->select("m.title", "m.id", "m.description", "m.image",  DB::raw("count(ml.id) as likes"))
+            ->select("m.title", "m.id", "m.description", "m.image", DB::raw("count(ml.id) as likes"))
             ->join("movies_likes as ml", "ml.movies_id", "=", "m.id", "left")
             ->orderBy("release_date", "DESC")
             ->groupBy('m.id', "m.title", "m.description", "m.image")
@@ -215,7 +220,8 @@ class MoviesRestController extends Controller
         return $moviesAll;
     }
 
-    public function userHadLikeMovie(Request $request){
+    public function userHadLikeMovie(Request $request)
+    {
 
         $exist = DB::table("movies_likes")
             ->select("*")
@@ -228,7 +234,7 @@ class MoviesRestController extends Controller
             return $response = [
                 "status" => 1,
             ];
-        }else {
+        } else {
             return $response = [
                 "status" => 0,
             ];
