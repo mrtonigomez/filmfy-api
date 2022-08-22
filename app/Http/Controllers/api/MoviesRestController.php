@@ -8,6 +8,7 @@ use App\Models\Entities;
 use App\Models\Movies;
 use App\Models\Page;
 use App\Services\PageService;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -63,14 +64,13 @@ class MoviesRestController extends Controller
                 "runtime" => $movie->runtime,
                 "status" => $movie->status,
                 "trailer" => $movie->trailer,
-                "categories" => $movie->category->pluck("name"),
-                "actors" => $movie->entities->where("roles_id", 1)->pluck("name"),
-                "directors" => $movie->entities->where("roles_id", 2)->pluck("name"),
-                "writters" => $movie->entities->where("roles_id", 3)->pluck("name"),
-                "comments" => $movie->comment,
-                "likes" => $movie->likes->count(),
+                "categories" => $movie->category()->pluck("name"),
+                "actors" => $movie->entities()->where("roles_id", 1)->pluck("name"),
+                "directors" => $movie->entities()->where("roles_id", 2)->pluck("name"),
+                "writters" => $movie->entities()->where("roles_id", 3)->pluck("name"),
+                "comments" => $movie->comment(),
+                "likes" => $movie->likes()->count(),
             ];
-
         return $response;
     }
 
@@ -100,14 +100,20 @@ class MoviesRestController extends Controller
     //Show all movies from an actor
     public function moviesActor($id)
     {
-        $movies_actor = Entities::find($id)->movies;
-        return $movies_actor;
+        $movies_actor = Entities::with(["movies"])->find($id);
+        return [
+            "name" => $movies_actor->name,
+            "movies" => $movies_actor->movies
+
+        ];
     }
 
     public function moviesLikes($id)
     {
-        $movies_likes = Movies::find($id)->likes;
-        return count($movies_likes);
+        $movies_likes = Movies::with(["likes"])->find($id);
+        return [
+            "number_likes" => count($movies_likes->likes)
+        ];
     }
 
     public function moviesStoreLikes(Request $request)
@@ -162,9 +168,10 @@ class MoviesRestController extends Controller
         return $movies_categories;
     }
 
+    //TODO: Refactor this method
     public function moviesOnMoreLists()
     {
-        $movies = [];
+        $reponse = [];
         $moviesSearch = DB::table("lists_movies as lm")
             ->select("lm.movies_id", DB::raw("count(lm.movies_id) as count_movies"))
             ->orderBy("count_movies", "DESC")
@@ -172,24 +179,23 @@ class MoviesRestController extends Controller
             ->limit(10)
             ->get();
 
-        foreach ($moviesSearch->toArray() as $movie) {
-            $movieFind = Movies::find($movie->movies_id);
-            $movieFinal = [
+        foreach ($moviesSearch as $key => $movie) {
+            $movieFind = Movies::with(["likes"])->find($movie->movies_id);
+            $reponse[$key] = [
                 "id" => $movieFind->id,
                 "title" => $movieFind->title,
                 "likes" => count($movieFind->likes),
                 "image" => $movieFind->image,
                 "times_added" => $movie->count_movies
             ];
-            array_push($movies, $movieFinal);
         }
 
-        return $movies;
+        return $reponse;
     }
 
     public function moviesYear($year)
     {
-        $allMovie = [];
+        $response = [];
         for ($i = $year + 1; $i < ($year + 11); $i++) {
             $movies = DB::table("movies as m")
                 ->select("m.title", "m.id", "m.description", "m.image", DB::raw("count(ml.id) as likes"))
@@ -198,13 +204,12 @@ class MoviesRestController extends Controller
                 ->groupBy('m.id', "m.title", "m.description", "m.image")
                 ->get();
 
-
             foreach ($movies as $movie) {
-                array_push($allMovie, $movie);
+                array_push($response, $movie);
             }
         }
 
-        return $allMovie;
+        return $response;
     }
 
     public function recentMovies()
