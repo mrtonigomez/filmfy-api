@@ -237,6 +237,21 @@ class MoviesRestController extends Controller
         return $moviesAll;
     }
 
+    public function upcommingMovies() {
+        $today =  date("Y-m-d");
+
+        $moviesAll = DB::table("movies as m")
+            ->select("m.title", "m.id", "m.release_date",  "m.description", "m.image",  DB::raw("count(ml.id) as likes"))
+            ->join("movies_likes as ml", "ml.movies_id", "=", "m.id", "left")
+            ->orderBy("release_date", "ASC")
+            ->groupBy('m.id', "m.title", "m.description", "m.image", "m.release_date")
+            ->where("m.release_date" ,">", $today)
+            ->limit(15)
+            ->get();
+
+        return $moviesAll;
+    }
+
     public function userHadLikeMovie(Request $request)
     {
 
