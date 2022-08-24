@@ -5,7 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class ListsLikes extends Model
+class ListsMovies extends Model
 {
     use CrudTrait;
 
@@ -15,7 +15,7 @@ class ListsLikes extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'lists_likes';
+    protected $table = 'lists_movies';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
@@ -35,10 +35,13 @@ class ListsLikes extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function lists() {
-        return $this->belongsTo(Lists::class);
+    public function movies() {
+        return $this->belongsToMany(Movies::class, "lists_movies", "");
     }
 
+    public function lists() {
+        return $this->belongsToMany(Lists::class);
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

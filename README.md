@@ -14,14 +14,42 @@ Además de la aplicación tenemos la parte interna de su funcionamiento dinámic
 
 ## 2. Database
 
-## Hosting
-    - Para el Tema de hospedaje de Filmfy hemos Usado una LAMP de Bitnami
-      ***Bitnami es una biblioteca de instaladores o paquetes de software para aplicaciones web y montones de software, así como aparatos virtuales.
-        - IP Bitnami: 13.38.179.141.
-    
+### Hosting
+- Para el Tema de hospedaje de Filmfy hemos Usado una LAMP de Bitnami
+    - Bitnami es una biblioteca de instaladores o paquetes de software para aplicaciones web y montones de software, así como aparatos virtuales.
+    - - IP Bitnami: 13.38.179.141.
+
+#### Nuestra base de datos consta de las siguientes Tablas
+
+- Categories
+    - Almacena los géneros de las películas
+- Categories_Movies
+    - Relación entre las películas y las categorías a las cuales puede pertenecer
+- Comments
+    - Almacena los comentarios de creados por los usuarios
+- Countries
+    - Ciudades Origen
+- Entities
+    - Nombres de las entidades del mundo cinematográfico
+- Entities_Movies
+    - Relación entre las entidades del cine y la película a la cual pertenecen
+- Lists
+    - Almacena las listas que hay en filmfy
+- Lists_likes
+    - Relación entre las listas y el usuario que da like a dicha lista
+- Lists_movies
+    - Relación entre Listas y películas, para almacenar una película dentro de una lista específica
+- Movies
+    - Almacena todas las películas que componen nuestra aplicación
+- Movies_likes
+    - Relación entre las películas y el usuario que da like a dicha película
+- Roles
+    - Tabla para asignar a un entidad un rol(Actor,Director o creador)
+- Users
+    - Almacena los usuarios que se han unido a Filmfy
+
 
 ## Database .env
-
 
 APP_NAME=Laravel
 APP_ENV=local

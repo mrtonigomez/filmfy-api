@@ -17,10 +17,10 @@ class CreateEntitiesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->date('formdate')->nullable();
-            $table->unsignedInteger('roles_id');
+            $table->unsignedInteger('roles_id')->index();
             $table->boolean('status')->default(1);
             $table->string("image")->nullable();
-            $table->unsignedInteger('country_id')->nullable();
+            $table->unsignedInteger('country_id')->nullable()->index();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 

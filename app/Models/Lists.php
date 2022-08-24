@@ -79,6 +79,11 @@ class Lists extends Model
         return $this->belongsToMany(Movies::class);
     }
 
+    public function likes() {
+        return $this->hasMany(ListsLikes::class);
+    }
+
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

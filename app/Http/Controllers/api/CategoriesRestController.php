@@ -8,11 +8,7 @@ use Illuminate\Http\Request;
 
 class CategoriesRestController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         return Categories::all();
