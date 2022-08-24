@@ -6,9 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Services\MoviesService;
 use App\Models\Entities;
 use App\Models\Movies;
-use App\Models\Page;
-use App\Services\PageService;
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -23,7 +20,10 @@ class MoviesRestController extends Controller
 
     public function index()
     {
-        $movies = Movies::with(["comment", "entities", "likes", "category"])->get();
+        $movies = Movies::with(["comment", "entities", "category"])
+            ->withCount("likes")
+            ->get();
+
         $response = [];
         foreach ($movies as $key => $movie) {
             $response[$key] = [
@@ -40,11 +40,20 @@ class MoviesRestController extends Controller
                 "directors" => $movie->entities->where("roles_id", 2)->pluck("name"),
                 "writters" => $movie->entities->where("roles_id", 3)->pluck("name"),
                 "comments" => $movie->comment,
-                "likes" => $movie->likes->count(),
+                "likes" => $movie->likes_count,
             ];
         }
 
         return $response;
+    }
+
+    public function onlyAllMovies()
+    {
+        $movies = DB::table("movies")
+            ->select("*")
+            ->get();
+
+        return $movies;
     }
 
     public function store(Request $request)
@@ -54,23 +63,26 @@ class MoviesRestController extends Controller
 
     public function show($id)
     {
-        $movie = Movies::find($id);
-            $response = [
-                "id" => $movie->id,
-                "title" => $movie->title,
-                "description" => $movie->description,
-                "release_date" => $movie->release_date,
-                "image" => $movie->image,
-                "runtime" => $movie->runtime,
-                "status" => $movie->status,
-                "trailer" => $movie->trailer,
-                "categories" => $movie->category()->pluck("name"),
-                "actors" => $movie->entities()->where("roles_id", 1)->pluck("name"),
-                "directors" => $movie->entities()->where("roles_id", 2)->pluck("name"),
-                "writters" => $movie->entities()->where("roles_id", 3)->pluck("name"),
-                "comments" => $movie->comment(),
-                "likes" => $movie->likes()->count(),
-            ];
+        $movie = Movies::with(["comment", "entities", "category"])
+            ->withCount("likes")
+            ->find($id);
+
+        $response = [
+            "id" => $movie->id,
+            "title" => $movie->title,
+            "description" => $movie->description,
+            "release_date" => $movie->release_date,
+            "image" => $movie->image,
+            "runtime" => $movie->runtime,
+            "status" => $movie->status,
+            "trailer" => $movie->trailer,
+            "categories" => $movie->category->pluck("name"),
+            "actors" => $movie->entities->where("roles_id", 1)->pluck("name"),
+            "directors" => $movie->entities->where("roles_id", 2)->pluck("name"),
+            "writters" => $movie->entities->where("roles_id", 3)->pluck("name"),
+            "comments" => $movie->comment,
+            "likes" => $movie->likes_count,
+        ];
         return $response;
     }
 
@@ -110,9 +122,9 @@ class MoviesRestController extends Controller
 
     public function moviesLikes($id)
     {
-        $movies_likes = Movies::with(["likes"])->find($id);
+        $movies_likes = Movies::withCount(["likes"])->find($id);
         return [
-            "number_likes" => count($movies_likes->likes)
+            "number_likes" => $movies_likes->likes_count
         ];
     }
 
@@ -180,11 +192,11 @@ class MoviesRestController extends Controller
             ->get();
 
         foreach ($moviesSearch as $key => $movie) {
-            $movieFind = Movies::with(["likes"])->find($movie->movies_id);
+            $movieFind = Movies::withCount(["likes"])->find($movie->movies_id);
             $reponse[$key] = [
                 "id" => $movieFind->id,
                 "title" => $movieFind->title,
-                "likes" => count($movieFind->likes),
+                "likes" => $movieFind->likes_count,
                 "image" => $movieFind->image,
                 "times_added" => $movie->count_movies
             ];

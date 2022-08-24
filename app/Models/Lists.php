@@ -83,6 +83,7 @@ class Lists extends Model
         return $this->hasMany(ListsLikes::class);
     }
 
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

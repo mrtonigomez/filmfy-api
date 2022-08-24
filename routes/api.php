@@ -42,6 +42,7 @@ Route::prefix('v1')->group(function () {
 
 
 Route::apiResource("movies",MoviesRestController::class);
+Route::get("only-all-movies",[MoviesRestController::class, "onlyAllMovies"]);
 Route::get("movies-actors/{id}", [MoviesRestController::class, "moviesActor"]);
 Route::get("movies-likes/{id}", [MoviesRestController::class, "moviesLikes"]);
 Route::get("movies-categories/{category}", [MoviesRestController::class, "moviesWithCategory"]);

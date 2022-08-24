@@ -223,12 +223,10 @@ class ListsRestController extends Controller
             DB::table("lists_movies")->insert($dataMovie);
         }
 
-
     }
 
     public function addMoviesToList(Request $request)
     {
-
         $data = [
             "lists_id" => $request->lists_id,
             "movies_id" => $request->movies_id
@@ -246,7 +244,6 @@ class ListsRestController extends Controller
             ->insert($data);
 
         return "Insert correcto";
-
     }
 
     public function recentLists()
@@ -357,18 +354,29 @@ class ListsRestController extends Controller
             ->limit(10)
             ->get();*/
 
-        $lists = Lists::select('lists.*', DB::raw('COUNT(ll.id) as l_likes'))
+        /*$lists = Lists::select('lists.*', DB::raw('COUNT(ll.id) as l_likes'))
                 ->leftJoin('lists_likes as ll', 'll.lists_id', '=', 'lists.id')
                 ->groupBy('lists.id', 'lists.title', 'lists.description', "lists.users_id", "lists.is_private", "lists.status", "lists.created_at", "lists.updated_at")
                 ->orderBy("l_likes", "DESC")
                 ->limit(10)
-                ->get();
+                ->get();*/
+
+        $lists = Lists::with(["users", "movies.category", "likes"])
+            ->select("lists.*", DB::raw('COUNT(ll.id) as l_likes'))
+            ->leftJoin('lists_likes as ll', 'll.lists_id', '=', 'lists.id')
+            ->groupBy('lists.id', 'lists.title', 'lists.description', "lists.users_id", "lists.is_private", "lists.status", "lists.created_at", "lists.updated_at")
+            ->orderBy("l_likes", "DESC")
+            ->limit(10)
+            ->get();
 
         $response = [];
 
         foreach ($lists as $key => $list) {
             $response[$key] = [
-                $list,
+                "l_id" => $list->id,
+                "l_title" => $list->title,
+                "l_description" => $list->description,
+                "l_likes" => $list->l_likes,
                 "user" => [
                     "name" => $list->users->name,
                     "profile_image" => $list->users->profile_image
