@@ -9,6 +9,10 @@ use App\Models\Movies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @OA\Info(title="API Filmfy", version="1.0")
+ *
+ */
 class MoviesRestController extends Controller
 {
     protected $_context;
@@ -18,6 +22,22 @@ class MoviesRestController extends Controller
         $this->_context = $context;
     }
 
+
+    /**
+     * @OA\Get(
+     *     path="/api/movies",
+     *     tags={"Movies"},
+     *     summary="Mostrar peliculas",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Mostrar todas las peliculas."
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error."
+     *     )
+     * )
+     */
     public function index()
     {
         $movies = Movies::with(["comment", "entities", "category"])
@@ -61,6 +81,38 @@ class MoviesRestController extends Controller
 
     }
 
+    /**
+     * @OA\Get(
+     *      path="/api/movies/{id}",
+     *      summary="Mostrar una película por ID",
+     *     tags={"Movies"},
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Movie id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
+     */
     public function show($id)
     {
         $movie = Movies::with(["comment", "entities", "category"])
@@ -86,24 +138,13 @@ class MoviesRestController extends Controller
         return $response;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
         //
@@ -127,6 +168,7 @@ class MoviesRestController extends Controller
             "number_likes" => $movies_likes->likes_count
         ];
     }
+
 
     public function moviesStoreLikes(Request $request)
     {
@@ -237,15 +279,16 @@ class MoviesRestController extends Controller
         return $moviesAll;
     }
 
-    public function upcommingMovies() {
-        $today =  date("Y-m-d");
+    public function upcommingMovies()
+    {
+        $today = date("Y-m-d");
 
         $moviesAll = DB::table("movies as m")
-            ->select("m.title", "m.id", "m.release_date",  "m.description", "m.image",  DB::raw("count(ml.id) as likes"))
+            ->select("m.title", "m.id", "m.release_date", "m.description", "m.image", DB::raw("count(ml.id) as likes"))
             ->join("movies_likes as ml", "ml.movies_id", "=", "m.id", "left")
             ->orderBy("release_date", "ASC")
             ->groupBy('m.id', "m.title", "m.description", "m.image", "m.release_date")
-            ->where("m.release_date" ,">", $today)
+            ->where("m.release_date", ">", $today)
             ->limit(15)
             ->get();
 

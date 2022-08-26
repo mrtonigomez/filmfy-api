@@ -200,6 +200,33 @@ class ListsRestController extends Controller
         return $user_lists;
     }
 
+
+    /**
+     * @OA\Post(
+     *      path="/api/create-list",
+     *      tags={"Lists"},
+     *      summary="Create a list",
+     *      @OA\RequestBody(
+     *          required=true,
+     *      ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
+     */
     public function createList(Request $request)
     {
 
