@@ -4,6 +4,7 @@ use App\Http\Controllers\api\CommentsRestController;
 use App\Http\Controllers\api\ListsRestController;
 use App\Http\Controllers\api\MoviesRestController;
 use App\Http\Controllers\api\UsersRestController;
+use \App\Http\Controllers\api\EntitiesRestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\AuthController;
@@ -72,3 +73,4 @@ Route::get("comment-like/{comment_id}", [CommentsRestController::class, "comment
 Route::get("comments-user/{user_id}", [CommentsRestController::class, "userComments"]);
 Route::post("user-had-comment", [CommentsRestController::class, "userHadComment"]);
 
+Route::get("entities", [EntitiesRestController::class, "index"]);

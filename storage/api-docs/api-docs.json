@@ -13,11 +13,47 @@
                 "summary": "Create a list",
                 "operationId": "d53183bf7c45fa81c78e716962e02865",
                 "requestBody": {
-                    "required": true
+                    "description": "Pass list data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "users_id",
+                                    "title",
+                                    "description",
+                                    "movies"
+                                ],
+                                "properties": {
+                                    "users_id": {
+                                        "type": "string"
+                                    },
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "movies": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
                 },
                 "responses": {
-                    "201": {
-                        "description": "Successful operation"
+                    "200": {
+                        "description": "Successfuly added"
                     },
                     "400": {
                         "description": "Bad Request"

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lists;
-use App\Models\Movies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -49,7 +48,9 @@ class ListsRestController extends Controller
         $lists = Lists::with([
             "users",
             "movies",
-            "likes"])->orderBy("updated_at", "DESC")->get();
+            "likes"])
+            ->orderBy("updated_at", "DESC")
+            ->get();
 
         $response = [];
 
@@ -173,12 +174,15 @@ class ListsRestController extends Controller
 
     public function userLists($idUser)
     {
-        $lists = Lists::all();
-        $user_lists = [];
+        $lists = Lists::with("users")
+            ->where("users_id", "=", $idUser)
+            ->withCount("movies", "likes")
+            ->get();
+        $response = [];
 
-        foreach ($lists->toArray() as $key => $list) {
+        foreach ($lists as $key => $list) {
 
-            $moviesList = DB::table("movies as m")
+            /*$moviesList = DB::table("movies as m")
                 ->join("lists_movies as lm", "lm.movies_id", "=", "m.id")
                 ->where("lists_id", "=", $list["id"])
                 ->get();
@@ -186,6 +190,7 @@ class ListsRestController extends Controller
 
             if ($list["users_id"] == $idUser && $list["status"] !== 0) {
                 $m_count = Lists::moviesInformation($list["id"]);
+                dd($m_count);
                 $likes = Lists::listLikes($list["id"]);
                 $listUser = [
                     "id" => $list["id"],
@@ -195,9 +200,17 @@ class ListsRestController extends Controller
                     "movies" => $moviesList,
                 ];
                 array_push($user_lists, $listUser);
-            }
+            }*/
+
+            $response[] = [
+                "id" => $list->id,
+                "title" => $list->title,
+                "list_likes" => $list->likes_count,
+                "movies_count" => $list->movies_count,
+                "movies" => $list->movies
+            ];
         }
-        return $user_lists;
+        return $response;
     }
 
 
@@ -208,10 +221,25 @@ class ListsRestController extends Controller
      *      summary="Create a list",
      *      @OA\RequestBody(
      *          required=true,
+     *          description="Pass list data",
+     *          @OA\JsonContent(
+     *              required={"users_id","title","description", "movies"},
+     *              @OA\Property(property="users_id", type="string"),
+     *              @OA\Property(property="title", type="string"),
+     *              @OA\Property(property="description", type="string"),
+     *              @OA\Property(property="movies", type="array",
+     *                  @OA\Items(
+     *                  @OA\Property(
+     *                         property="id",
+     *                         type="string",
+     *                      ),
+     *
+     *      ),),
+     *          ),
      *      ),
      *      @OA\Response(
-     *          response=201,
-     *          description="Successful operation",
+     *          response=200,
+     *          description="Successfuly added",
      *       ),
      *      @OA\Response(
      *          response=400,
@@ -251,7 +279,7 @@ class ListsRestController extends Controller
             ];
             DB::table("lists_movies")->insert($dataMovie);
         }
-
+        return response("Succesfully added para", 200);
     }
 
     public function updateList(Request $request)
