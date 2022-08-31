@@ -85,8 +85,6 @@ class ListsRestController extends Controller
 
     public function show($id)
     {
-        $time_start = microtime(true);
-
         /*$list = Lists::find($id);
 
         $movies = Lists::moviesInformation($list->id)[0];
@@ -127,31 +125,14 @@ class ListsRestController extends Controller
             //TODO:Return an array of categories inse the movies object
             "movies" => $list->movies,
         ];
-
-        $time_end = microtime(true);
-        $execution_time = ($time_end - $time_start);
-        /*echo '<b>Total Execution Time:</b> '.($execution_time*1000).'Milliseconds';*/
         return $response;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $list = Lists::find($id);
@@ -229,12 +210,12 @@ class ListsRestController extends Controller
      *              @OA\Property(property="description", type="string"),
      *              @OA\Property(property="movies", type="array",
      *                  @OA\Items(
-     *                  @OA\Property(
+     *                      @OA\Property(
      *                         property="id",
      *                         type="string",
      *                      ),
-     *
-     *      ),),
+     *                  ),
+     *              ),
      *          ),
      *      ),
      *      @OA\Response(
