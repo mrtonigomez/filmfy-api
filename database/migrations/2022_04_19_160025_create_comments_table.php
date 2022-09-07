@@ -15,21 +15,17 @@ class CreateCommentsTable extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('movies_id')->index();
             $table->unsignedInteger('users_id')->index();
             $table->string('title', 75);
-            $table->string('body', 1000);
+            $table->text('body');
             $table->integer('rating');
+            $table->nullableMorphs("commentable");
             $table->boolean('moderated')->default(1);
             $table->boolean('status')->default(1);
             $table->integer('likes');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
-            $table->foreign('movies_id')
-                ->references('id')
-                ->on('movies')
-                ->onDelete('cascade');
             $table->foreign('users_id')
                 ->references('id')
                 ->on('users')

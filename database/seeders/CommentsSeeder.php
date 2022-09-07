@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Comments;
+use App\Models\Movies;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -16,7 +18,6 @@ class CommentsSeeder extends Seeder
     {
         $comments = [
             [
-                'movies_id' => 2,
                 'users_id' => 1,
                 'title' => 'Una película increíble',
                 'body' => 'El suspense de esta historía te pone la piel de gallina. El reparto es inmejorable',
@@ -24,7 +25,6 @@ class CommentsSeeder extends Seeder
                 'likes' => 51
             ],
             [
-                'movies_id' => 101,
                 'users_id' => 3,
                 'title' => 'Una película guapísima',
                 'body' => 'Me lo paso muy bien cada vez que la veo. De mis preferidas',
@@ -32,7 +32,6 @@ class CommentsSeeder extends Seeder
                 'likes' => 2222
             ],
             [
-                'movies_id' => 203,
                 'users_id' => 1,
                 'title' => 'No me canso de verla',
                 'body' => '¡Volver al futuro a ver esta película una y otra vez! La película lo inicio todo y envejece perfectamente como un clásico de la comedia y la ciencia ficción, todo gracias a unos efectos especiales chispeantes, un puñado de lineás y diálogos fenomenales',
@@ -40,7 +39,6 @@ class CommentsSeeder extends Seeder
                 'likes' => 29
             ],
             [
-                'movies_id' => 71,
                 'users_id' => 2,
                 'title' => 'Esperaba más',
                 'body' => 'La fórmula de Disney repetida una vez más sin aportar frescura o novedades a un producto que tienen muy explotado',
@@ -48,7 +46,6 @@ class CommentsSeeder extends Seeder
                 'likes' => 3
             ],
             [
-                'movies_id' => 111,
                 'users_id' => 1,
                 'title' => 'Es que no puedo...',
                 'body' => 'Desde que vi el deporte ese de la peña persiguiendo una pelota en escoba... es que no puedo con ello más. Horrible como siempre el Harry',
@@ -57,7 +54,12 @@ class CommentsSeeder extends Seeder
             ]
         ];
 
-        DB::table('comments')->insert($comments);
+        DB::table("comments")
+            ->insert($comments);
+
+        foreach (Comments::all() as $comment_loop) {
+            $comment_loop->commentable()->associate(Movies::find(rand(1, 390)))->save();
+        }
 
     }
 }

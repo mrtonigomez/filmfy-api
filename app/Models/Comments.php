@@ -19,8 +19,8 @@ class Comments extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    protected $fillable = ["movies_id", "users_id", 'title', 'body', 'moderated',
-        'status', 'likes', 'rating'];
+    protected $fillable = ["users_id", 'title', 'body', 'moderated',
+        'status', 'likes', 'rating', "commentable_type", "commentable_id"];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -41,8 +41,8 @@ class Comments extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function movies() {
-        return $this->belongsTo(Movies::class);
+    public function commentable(){
+        return $this->morphTo();
     }
 
     /*
