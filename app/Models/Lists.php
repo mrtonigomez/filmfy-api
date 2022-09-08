@@ -83,6 +83,9 @@ class Lists extends Model
         return $this->hasMany(ListsLikes::class);
     }
 
+    public function comment(){
+        return $this->morphMany(Comments::class, "commentable");
+    }
 
     /*
     |--------------------------------------------------------------------------

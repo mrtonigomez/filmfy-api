@@ -25,8 +25,8 @@ class MoviesRestController extends Controller
             ->get();
 
         $response = [];
-        foreach ($movies as $key => $movie) {
-            $response[$key] = [
+        foreach ($movies as  $movie) {
+            $response[] = [
                 "id" => $movie->id,
                 "title" => $movie->title,
                 "description" => $movie->description,
@@ -217,7 +217,7 @@ class MoviesRestController extends Controller
                 ->get();
 
             foreach ($movies as $movie) {
-                array_push($response, $movie);
+                $response[] = $movie;
             }
         }
 

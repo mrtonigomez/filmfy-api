@@ -10,51 +10,17 @@ use Illuminate\Support\Facades\DB;
 
 class ListsRestController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return array
-     */
+
     public function index()
     {
-        /*$allLists = [];
-
-        $listsAll = DB::table("lists as l")
-            ->select('l.id as l_id', 'l.title as l_title', DB::raw('COUNT(ll.id) as l_likes'))
-            ->leftJoin('lists_likes as ll', 'll.lists_id', '=', 'l.id')
-            ->groupBy('l.id', 'l.title')
-            ->orderBy("l.updated_at", "DESC")
+        $lists = Lists::with(["comment", "users", "movies", "likes"])
+            ->withCount("movies")
+            ->orderBy("updated_at", "DESC")
             ->get();
 
-        foreach ($listsAll as $key => $list) {
-
-            $movies = Lists::moviesInformation($list->l_id)[0];
-            $m_count = Lists::moviesInformation($list->l_id)[1];
-            $user = Lists::userInformation($list->l_id);
-
-            $list->user = $user;
-            $list->movies_count = $m_count;
-            $list->movies = $movies;
-
-            foreach ($list->movies as $movie) {
-                $m_categories = Movies::returnExtraInformation($movie->id);
-                $movie["categories"] = $m_categories["categories"];
-            }
-
-            array_push($allLists, $list);
-        }
-
-        return $allLists;*/
-
-        $lists = Lists::with([
-            "users",
-            "movies",
-            "likes"])->orderBy("updated_at", "DESC")->get();
-
         $response = [];
-
-        foreach ($lists as $key => $list) {
-            $response[$key] = [
+        foreach ($lists as $list) {
+            $response[] = [
                 "l_id" => $list->id,
                 "l_title" => $list->title,
                 "l_likes" => $list->likes->count(),
@@ -62,20 +28,15 @@ class ListsRestController extends Controller
                     "name" => $list->users->name,
                     "profile_image" => $list->users->profile_image
                 ],
-                "movies_count" => $list->movies->count(),
+                "movies_count" => $list->movies_count,
                 "movies" => $list->movies,
+                "comments" => $list->comment
             ];
         }
 
         return $response;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
@@ -84,31 +45,11 @@ class ListsRestController extends Controller
 
     public function show($id)
     {
-        $time_start = microtime(true);
+        $list = Lists::with(["movies.category", "comment", "users"])
+            ->withCount("likes")
+            ->withCount("movies")
+            ->find($id);
 
-        /*$list = Lists::find($id);
-
-        $movies = Lists::moviesInformation($list->id)[0];
-        $m_count = Lists::moviesInformation($list->id)[1];
-        $user = Lists::userInformation($list->id);
-        $likes = Lists::listLikes($list->id);
-
-
-        $user_lists = [
-            "id" => $list["id"],
-            "title" => $list["title"],
-            "description" => $list["description"],
-            "is_private" => $list["is_private"],
-            "user" => $user,
-            "status" => $list["status"],
-            "likes" => $likes->count,
-            "created_at" => $list["created_at"],
-            "updated_at" => $list["updated_at"],
-            "movies_count" => $m_count,
-            "movies" => $movies,
-        ];*/
-
-        $list = Lists::with(["movies.category"])->find($id);
         $response = [
             "id" => $list->id,
             "title" => $list->title,
@@ -119,38 +60,23 @@ class ListsRestController extends Controller
                 "profile_image" => $list->users->profile_image
             ],
             "status" => $list->status,
-            "likes" => $list->likes->count(),
+            "likes" => $list->likes_count,
             "created_at" => $list->created_at,
             "updated_at" => $list->updated_at,
-            "movies_count" => $list->movies->count(),
+            "movies_count" => $list->movies_count,
+            "comments" => $list->comment,
             //TODO:Return an array of categories inse the movies object
             "movies" => $list->movies,
         ];
 
-        $time_end = microtime(true);
-        $execution_time = ($time_end - $time_start);
-        /*echo '<b>Total Execution Time:</b> '.($execution_time*1000).'Milliseconds';*/
         return $response;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $list = Lists::find($id);
@@ -173,7 +99,7 @@ class ListsRestController extends Controller
 
     public function userLists($idUser)
     {
-        $lists = Lists::all();
+        /*$lists = Lists::all();
         $user_lists = [];
 
         foreach ($lists->toArray() as $key => $list) {
@@ -194,10 +120,31 @@ class ListsRestController extends Controller
                     "movies_count" => $m_count[1],
                     "movies" => $moviesList,
                 ];
-                array_push($user_lists, $listUser);
+                $user_lists[] = $listUser;
             }
         }
-        return $user_lists;
+        return $user_lists;*/
+
+        $lists = Lists::with("movies", "likes", "users", "comment")
+            ->where("users_id", "=", $idUser)
+            ->withCount("movies")
+            ->withCount("likes")
+            ->get();
+
+        $response = [];
+
+        foreach ($lists as $list) {
+            $response[] = [
+                "id" => $list->id,
+                "title" => $list->title,
+                "list_likes" => $list->likes_count,
+                "movies_count" => $list->movies_count,
+                "movies" => $list->movies,
+                "comment" => $list->comment
+            ];
+        }
+
+        return $response;
     }
 
     public function createList(Request $request)
@@ -310,10 +257,8 @@ class ListsRestController extends Controller
 
         return $recentLists;*/
 
-        $lists = Lists::with([
-            "users",
-            "movies",
-            "likes"])
+        $lists = Lists::with(["users", "movies", "likes"])
+            ->withCount("movies", "likes")
             ->orderBy("updated_at", "DESC")
             ->limit(10)
             ->get();
@@ -325,12 +270,12 @@ class ListsRestController extends Controller
                 "l_id" => $list->id,
                 "l_title" => $list->title,
                 "l_description" => $list->description,
-                "l_likes" => $list->likes->count(),
+                "l_likes" => $list->likes_count,
                 "user" => [
                     "name" => $list->users->name,
                     "profile_image" => $list->users->profile_image
                 ],
-                "movies_count" => $list->movies->count(),
+                "movies_count" => $list->movies_count,
                 "movies" => $list->movies,
             ];
         }

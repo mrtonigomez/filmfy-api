@@ -98,6 +98,11 @@ class Movies extends Model
         return $this->belongsToMany(Categories::class);
     }
 
+    public function entities() {
+        return $this->belongsToMany(Entities::class);
+    }
+
+    //TODO: Changes required on DB to refactor this
     public function entitiesActors() {
         return $this->belongsToMany(Entities::class);
     }
@@ -114,8 +119,8 @@ class Movies extends Model
         return $this->belongsToMany(Lists::class);
     }
 
-    public function comments(){
-        return $this->morphMany("App\Models\Movies", "commentable");
+    public function comment(){
+        return $this->morphMany(Comments::class, "commentable");
     }
 
     public function likes() {

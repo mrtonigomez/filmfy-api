@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Comments;
+use App\Models\Lists;
 use App\Models\Movies;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +17,7 @@ class CommentsSeeder extends Seeder
      */
     public function run()
     {
-        $comments = [
+        $commentsMovies = [
             [
                 'users_id' => 1,
                 'title' => 'Una película increíble',
@@ -26,8 +27,8 @@ class CommentsSeeder extends Seeder
             ],
             [
                 'users_id' => 3,
-                'title' => 'Una película guapísima',
-                'body' => 'Me lo paso muy bien cada vez que la veo. De mis preferidas',
+                'title' => 'Fantastica lista claro que si',
+                'body' => 'Estoy muy de acuerdo con todas las películas icnluidas. La verdad es que contamos con el mismo gusto para el buen cine',
                 'rating' => 10,
                 'likes' => 2222
             ],
@@ -40,8 +41,8 @@ class CommentsSeeder extends Seeder
             ],
             [
                 'users_id' => 2,
-                'title' => 'Esperaba más',
-                'body' => 'La fórmula de Disney repetida una vez más sin aportar frescura o novedades a un producto que tienen muy explotado',
+                'title' => 'No estoy muy de acuerdo',
+                'body' => 'Bajo mi punto de vista y partiendo de que respeto tu lista, hay algunas que me parecen bastante flojas como para ponerlas aquí. Desprenden bastante mediocridad',
                 'rating' => 4,
                 'likes' => 3
             ],
@@ -55,11 +56,20 @@ class CommentsSeeder extends Seeder
         ];
 
         DB::table("comments")
-            ->insert($comments);
+            ->insert($commentsMovies);
 
-        foreach (Comments::all() as $comment_loop) {
-            $comment_loop->commentable()->associate(Movies::find(rand(1, 390)))->save();
+        $movies = Movies::all();
+        $lists = Lists::all();
+        $comments = Comments::all();
+
+        $i = 0;
+        foreach ($comments as $comment) {
+            ($i % 2 === 0)
+                ? $comment->commentable()->associate(Movies::find(rand(1, count($movies))))->save()
+                : $comment->commentable()->associate(Lists::find(rand(1, count($lists))))->save();
+            $i++;
         }
+
 
     }
 }
