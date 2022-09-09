@@ -10,3 +10,5 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('categories') }}'><i class='nav-icon la la-sitemap'></i> Categories</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('countries') }}'><i class='nav-icon la la-flag'></i> Countries</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('comments') }}'><i class='nav-icon la la-comment'></i> Comments</a></li>
+
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('likes') }}"><i class="nav-icon la la-question"></i> Likes</a></li>

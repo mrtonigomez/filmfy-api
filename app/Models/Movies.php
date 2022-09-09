@@ -123,8 +123,8 @@ class Movies extends Model
         return $this->morphMany(Comments::class, "commentable");
     }
 
-    public function likes() {
-        return $this->hasMany(MoviesLikes::class);
+    public function likes(){
+        return $this->morphMany(Likes::class, "likeable");
     }
 
     /*

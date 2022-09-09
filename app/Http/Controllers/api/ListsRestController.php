@@ -339,30 +339,26 @@ class ListsRestController extends Controller
                 ->get();*/
 
         $lists = Lists::with(["users", "movies.category", "likes"])
-            ->select("lists.*", DB::raw('COUNT(ll.id) as l_likes'))
-            ->leftJoin('lists_likes as ll', 'll.lists_id', '=', 'lists.id')
-            ->groupBy('lists.id', 'lists.title', 'lists.description', "lists.users_id", "lists.is_private", "lists.status", "lists.created_at", "lists.updated_at")
-            ->orderBy("l_likes", "DESC")
-            ->limit(10)
-            ->get();
+            ->withCount(["likes", "movies"])
+            ->orderBy("likes_count", "desc")
+        ->get();
 
         $response = [];
 
-        foreach ($lists as $key => $list) {
-            $response[$key] = [
+        foreach ($lists as  $list) {
+            $response[] = [
                 "l_id" => $list->id,
                 "l_title" => $list->title,
                 "l_description" => $list->description,
-                "l_likes" => $list->l_likes,
+                "l_likes" => $list->likes_count,
                 "user" => [
                     "name" => $list->users->name,
                     "profile_image" => $list->users->profile_image
                 ],
-                "movies_count" => $list->movies->count(),
+                "movies_count" => $list->movies_count,
                 "movies" => $list->movies,
             ];
         }
-
         return $response;
     }
 

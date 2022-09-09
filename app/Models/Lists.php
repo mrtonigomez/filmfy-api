@@ -79,13 +79,14 @@ class Lists extends Model
         return $this->belongsToMany(Movies::class);
     }
 
-    public function likes() {
-        return $this->hasMany(ListsLikes::class);
-    }
-
     public function comment(){
         return $this->morphMany(Comments::class, "commentable");
     }
+
+    public function likes(){
+        return $this->morphMany(Likes::class, "likeable");
+    }
+
 
     /*
     |--------------------------------------------------------------------------

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Services\MoviesService;
 use App\Models\Entities;
+use App\Models\Lists;
 use App\Models\Movies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +26,7 @@ class MoviesRestController extends Controller
             ->get();
 
         $response = [];
-        foreach ($movies as  $movie) {
+        foreach ($movies as $movie) {
             $response[] = [
                 "id" => $movie->id,
                 "title" => $movie->title,
@@ -86,24 +87,11 @@ class MoviesRestController extends Controller
         return $response;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //
@@ -141,14 +129,34 @@ class MoviesRestController extends Controller
     public function bestMovies()
     {
         $movies_likes = DB::table("movies as m")
-            ->select("m.title", "m.id", "m.description", "m.image", DB::raw("count(ml.id) as likes"))
-            ->join("movies_likes as ml", "ml.movies_id", "=", "m.id", "left")
+            ->select("m.id", "m.title", "m.description", "m.image", DB::raw("count(l.id) as likes"))
+            ->join("likes as l", "l.likeable_id", "=", "m.id", "left")
+            ->where("l.likeable_type", "=", "App\Models\Movies")
             ->orderBy("likes", "DESC")
             ->groupBy('m.id', "m.title", "m.description", "m.image")
             ->limit(15)
             ->get();
 
+
         return $movies_likes;
+
+        /*$movies = Movies::with("likes")
+            ->withCount("likes")
+            ->orderBy("likes_count", "desc")
+            ->limit(15)
+            ->get();
+
+        $response = [];
+        foreach ($movies as $movie) {
+            $response[] = [
+                "id" => $movie->id,
+                "title" => $movie->title,
+                "description" => $movie->description,
+                "image" => $movie->image,
+                "likes" => $movie->likes_count,
+            ];
+        }
+        return $response;*/
     }
 
     //Find movies name
@@ -165,19 +173,46 @@ class MoviesRestController extends Controller
     //Return movies related to a one category
     public function moviesWithCategory($category)
     {
-        $category_filter = str_replace('-', ' ', $category);
+        //Not working for where clause
+        /*$category_filter = str_replace('-', ' ', $category);
         $category_id = DB::table("categories")
             ->where("name", "=", $category_filter)
             ->value("id");
 
         $movies_categories = DB::table("movies as m")
-            ->select('m.id', "m.title", "m.description", "m.image", DB::raw("count(ml.id) as likes"))
+            ->select('m.id', "m.title", "m.description", "m.image", DB::raw("count(l.id) as likes"))
             ->join("categories_movies as c", "m.id", "=", "c.movies_id")
-            ->join("movies_likes as ml", "ml.movies_id", "=", "m.id", "left")
+            ->join("likes as l", "l.likeable_id", "=", "m.id", "left")
+            ->where("l.likeable_type", "=", "App\Models\Movies")
             ->where("c.categories_id", "=", $category_id)
             ->groupBy('m.id', "m.title", "m.description", "m.image")
             ->get();
-        return $movies_categories;
+
+        return $movies_categories;*/
+
+        $category_filter = str_replace('-', ' ', $category);
+        $category_id = DB::table("categories")
+            ->where("name", "=", $category_filter)
+            ->value("id");
+
+        $movies = Movies::whereHas("category" ,function ($query) use ($category_id) {
+                $query->where("categories_id", $category_id);
+            })
+            ->withCount("likes")
+        ->get();
+
+        $response = [];
+        foreach ($movies as $movie) {
+            $response[] = [
+                "id" => $movie->id,
+                "title" => $movie->title,
+                "description" => $movie->description,
+                "image" => $movie->image,
+                "likes" => $movie->likes_count,
+            ];
+        }
+
+        return $response;
     }
 
     //TODO: Refactor this method
@@ -210,9 +245,9 @@ class MoviesRestController extends Controller
         $response = [];
         for ($i = $year + 1; $i < ($year + 11); $i++) {
             $movies = DB::table("movies as m")
-                ->select("m.title", "m.id", "m.description", "m.image", DB::raw("count(ml.id) as likes"))
+                ->select("m.title", "m.id", "m.description", "m.image", DB::raw("count(l.id) as likes"))
                 ->where("release_date", "like", "%" . $i . "%")
-                ->join("movies_likes as ml", "ml.movies_id", "=", "m.id", "left")
+                ->join("likes as ml", "l.movies_id", "=", "m.id", "left")
                 ->groupBy('m.id', "m.title", "m.description", "m.image")
                 ->get();
 
@@ -227,8 +262,8 @@ class MoviesRestController extends Controller
     public function recentMovies()
     {
         $moviesAll = DB::table("movies as m")
-            ->select("m.title", "m.id", "m.description", "m.image", DB::raw("count(ml.id) as likes"))
-            ->join("movies_likes as ml", "ml.movies_id", "=", "m.id", "left")
+            ->select("m.title", "m.id", "m.description", "m.image", DB::raw("count(l.id) as likes"))
+            ->join("likes as ml", "l.movies_id", "=", "m.id", "left")
             ->orderBy("release_date", "DESC")
             ->groupBy('m.id', "m.title", "m.description", "m.image")
             ->limit(15)
@@ -237,15 +272,16 @@ class MoviesRestController extends Controller
         return $moviesAll;
     }
 
-    public function upcommingMovies() {
-        $today =  date("Y-m-d");
+    public function upcommingMovies()
+    {
+        $today = date("Y-m-d");
 
         $moviesAll = DB::table("movies as m")
-            ->select("m.title", "m.id", "m.release_date",  "m.description", "m.image",  DB::raw("count(ml.id) as likes"))
-            ->join("movies_likes as ml", "ml.movies_id", "=", "m.id", "left")
+            ->select("m.title", "m.id", "m.release_date", "m.description", "m.image", DB::raw("count(l.id) as likes"))
+            ->join("likes l", "l.movies_id", "=", "m.id", "left")
             ->orderBy("release_date", "ASC")
             ->groupBy('m.id', "m.title", "m.description", "m.image", "m.release_date")
-            ->where("m.release_date" ,">", $today)
+            ->where("m.release_date", ">", $today)
             ->limit(15)
             ->get();
 
