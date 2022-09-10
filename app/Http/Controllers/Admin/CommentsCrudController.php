@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\CommentsRequest;
+use App\Models\Comments;
+use App\Models\Lists;
+use App\Models\Movies;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -19,29 +22,31 @@ class CommentsCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
-    /**
-     * Configure the CrudPanel object. Apply settings to all operations.
-     *
-     * @return void
-     */
     public function setup()
     {
         CRUD::setModel(\App\Models\Comments::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/comments');
         CRUD::setEntityNameStrings('comments', 'comments');
+
+        Comments::saving(function ($item) {
+            $rq = $this->crud->getRequest();
+
+            if ($rq->movies !== null) {
+                $movie = Movies::find($rq->movies);
+                $item->commentable()->associate($movie);
+            } else if ($rq->lists !== null) {
+                $list = Lists::find($rq->lists);
+                $item->commentable()->associate($list);
+            }
+        });
     }
 
-    /**
-     * Define what happens when the List operation is loaded.
-     *
-     * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
-     * @return void
-     */
     protected function setupListOperation()
     {
         CRUD::column('id');
-        CRUD::column('movies_id');
         CRUD::column('users_id');
+        CRUD::column("commentable_type");
+        CRUD::column("commentable_id");
         CRUD::column('title');
         CRUD::column('body');
         CRUD::column('status');
@@ -51,17 +56,12 @@ class CommentsCrudController extends CrudController
             "label" => "Rating",
         ]);
 
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']);
-         */
+
     }
 
     protected function setupShowOperation()
     {
         CRUD::column('id');
-        CRUD::column('movies_id');
         CRUD::column('users_id');
         CRUD::column('title')->limit(10000);;
         CRUD::column('body')->limit(10000);;
@@ -72,12 +72,7 @@ class CommentsCrudController extends CrudController
         CRUD::column('updated_at');
     }
 
-    /**
-     * Define what happens when the Create operation is loaded.
-     *
-     * @see https://backpackforlaravel.com/docs/crud-operation-create
-     * @return void
-     */
+
     protected function setupCreateOperation()
     {
         CRUD::setValidation(CommentsRequest::class);
@@ -89,50 +84,94 @@ class CommentsCrudController extends CrudController
 
             'model' => "App\Models\User", // related model
             'attribute' => 'name', // foreign key attribute that is shown to user
-            'options'   => (function ($query) {
+            'options' => (function ($query) {
                 return $query->orderBy('name', 'ASC')->get();
             })
 
         ]);
-        $this->crud->addField([
-            'name' => 'movies',
-            'label' => 'Movies',
-            'type' => 'select',
 
-            'model' => "App\Models\Movies", // related model
-            'attribute' => 'title', // foreign key attribute that is shown to user
-            'options'   => (function ($query) {
-                return $query->orderBy('title', 'ASC')->get();
-            })
-
-        ]);
         CRUD::field('title')->limit(10000);;
         $this->crud->addField([
             'name' => 'body',
             'label' => 'Body',
-
-            'type' => 'text', // foreign key attribute that is shown to user
+            'type' => 'text',
 
         ])->limit(10000);;
+
+        $this->crud->addField([
+            "name" => "movies",
+            "type" => "select",
+            "label" => "Commentable movies",
+            "attribute" => "title",
+            'model' => "App\Models\Movies",
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ]
+        ]);
+
+        $this->crud->addField([
+            "name" => "lists",
+            "type" => "select",
+            "label" => "Commentable lists",
+            "attribute" => "title",
+            'model' => "App\Models\Lists",
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ]
+        ]);
         CRUD::field('status');
         CRUD::field('likes');
-        CRUD::field('rating')->type("text")->name("rating");;
+        CRUD::field('rating')->type("text")->name("rating");
 
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
-         */
     }
 
-    /**
-     * Define what happens when the Update operation is loaded.
-     *
-     * @see https://backpackforlaravel.com/docs/crud-operation-update
-     * @return void
-     */
+
     protected function setupUpdateOperation()
     {
-        $this->setupCreateOperation();
+        CRUD::setValidation(CommentsRequest::class);
+
+        $this->crud->addField([
+            'name' => 'users',
+            'label' => 'Users',
+            'type' => 'select',
+
+            'model' => "App\Models\User", // related model
+            'attribute' => 'name', // foreign key attribute that is shown to user
+            'options' => (function ($query) {
+                return $query->orderBy('name', 'ASC')->get();
+            })
+
+        ]);
+
+        CRUD::field('title')->limit(10000);;
+        $this->crud->addField([
+            'name' => 'body',
+            'label' => 'Body',
+            'type' => 'text',
+
+        ])->limit(10000);;
+
+        $item = Comments::find(\Route::current()->parameter('id'));
+        if ($item->commentable_type === "App\Models\Movies") {
+            $this->crud->addField([
+                "name" => "movies",
+                "type" => "select",
+                "label" => "Commentable movies",
+                "attribute" => "title",
+                'model' => "App\Models\Movies"
+            ]);
+        } else {
+            $this->crud->addField([
+                "name" => "lists",
+                "type" => "select",
+                "label" => "Commentable lists",
+                "attribute" => "title",
+                'model' => "App\Models\Lists"
+            ]);
+        }
+
+        CRUD::field('status');
+        CRUD::field('likes');
+        CRUD::field('rating')->type("text")->name("rating");
     }
 }

@@ -43,6 +43,14 @@ class Likes extends Model
         return $this->morphTo();
     }
 
+    public function movies(){
+        return $this->belongsTo(Movies::class);
+    }
+
+    public function lists(){
+        return $this->belongsTo(Lists::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

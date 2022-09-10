@@ -4,76 +4,69 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Comments;
+use App\Models\Lists;
+use App\Models\Movies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CommentsRestController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        return Comments::all();
+        return DB::table('comments')
+            ->select("*")
+            ->get();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request, $movie_id)
+    public function storeCommentMovie(Request $request, $movie_id)
     {
+        $movie = Movies::find($movie_id);
+        $new_comment = Comments::create([
+            'users_id' => $request->users_id,
+            'title' => $request->title,
+            'body' => $request->body,
+            'rating' => $request->rating,
+            'moderated' => 0,
+            'status' => 0,
+            'likes' => 0
 
-        $new_comment = DB::table('comments')
-            ->insert([
-                'movies_id' => $movie_id,
-                'users_id' => $request->users_id,
-                'title' => $request->title,
-                'body' => $request->body,
-                'rating' => $request->rating,
-                'moderated' => 0,
-                'status' => 0,
-                'likes' => 0
+        ]);
 
-            ]);
-
+        $new_comment->commentable()->associate($movie)->save();
         return $new_comment;
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
+    public function storeCommentList(Request $request, $list_id)
+    {
+        $list = Lists::find($list_id);
+        $new_comment = Comments::create([
+            'users_id' => $request->users_id,
+            'title' => $request->title,
+            'body' => $request->body,
+            'rating' => $request->rating,
+            'moderated' => 0,
+            'status' => 0,
+            'likes' => 0
+
+        ]);
+
+        $new_comment->commentable()->associate($list)->save();
+        return $new_comment;
+
+    }
+
     public function show($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //
@@ -82,22 +75,23 @@ class CommentsRestController extends Controller
 
     public function userComments($user_id)
     {
-        $comments = Comments::with(["movies"])->get();
+        //whereHas
+        $comments = Comments::with(["commentable", "users"])
+            ->where("users_id", $user_id)
+            ->get();
 
         $response = [];
-        foreach ($comments as $key => $comment) {
-            if ($comment["users_id"] == $user_id) {
-                $response[$key] = [
-                    "id" => $comment->id,
-                    "title" => $comment->title,
-                    "body" => $comment->body,
-                    "rating" => $comment->rating,
-                    "likes" => $comment->likes,
-                    "movie" => $comment->movies,
-                    "created_at" => $comment->created_at,
-                    "updated_at" => $comment->updated_at,
-                ];
-            }
+        foreach ($comments as $comment) {
+            $response[] = [
+                "id" => $comment->id,
+                "title" => $comment->title,
+                "body" => $comment->body,
+                "rating" => $comment->rating,
+                "likes" => $comment->likes,
+                "movie" => $comment->commentable,
+                "created_at" => $comment->created_at,
+                "updated_at" => $comment->updated_at,
+            ];
         }
         return $response;
     }
@@ -105,9 +99,11 @@ class CommentsRestController extends Controller
     public function recentComments()
     {
         $comments = DB::table("comments as c")
-            ->select('m.title as m_title', 'm.release_date as m_release', 'm.image as m_image', 'c.*', 'u.name as u_name', 'u.profile_image as u_image')
-            ->leftJoin('movies as m', 'm.id', '=', 'c.movies_id')
+            ->select('m.title as m_title', 'm.release_date as m_release', 'm.image as m_image', 'c.id',
+                'c.commentable_id as movies_id', 'c.users_id', 'c.title', 'c.body', 'c.rating', 'c.moderated', 'c.status', 'c.likes', 'c.created_at', 'c.updated_at', 'u.name as u_name', 'u.profile_image as u_image')
+            ->leftJoin('movies as m', 'm.id', '=', 'c.commentable_id')
             ->leftJoin('users as u', 'u.id', '=', 'c.users_id')
+            ->where("commentable_type", "App\Models\Movies")
             ->orderBy("c.updated_at", "DESC")
             ->limit(5)
             ->get();
@@ -117,16 +113,43 @@ class CommentsRestController extends Controller
 
     public function movieComments($id)
     {
-        $movie_comments = DB::table('comments as c')
-            ->select("m.title as movie ", "c.id", "c.title", "c.body", "c.rating", "c.likes", "m.image", "c.created_at", "u.name as user")
-            ->leftJoin('movies as m', 'm.id', '=', 'c.movies_id')
-            ->join("users as u", "u.id", "=", "c.users_id")
-            ->orderBy("c.updated_at", "DESC")
-            ->where('m.id', '=', $id)
-            ->limit(5)
+        $comments = Comments::with(["users", "commentable"])
+            ->where("commentable_id", $id)
+            ->where("commentable_type", "App\Models\Movies")
+            ->orderBy("comments.updated_at", "DESC")
             ->get();
 
-        return $movie_comments;
+
+        $response = $comments->map(function ($item) {
+            return [
+                "id" => $item->id,
+                "movie" => $item->commentable->title,
+                "title" => $item->title,
+                "body" => $item->body,
+                "rating" => $item->rating,
+                "likes" => $item->likes,
+                "image" => $item->commentable->image,
+                "created_at" => $item->created_at,
+                "user" => $item->users->name,
+            ];
+        });
+
+        /*$response = [];
+        foreach ($comments as $comment) {
+            $response[] = [
+                "movie" => $comment->commentable->title,
+                "id" => $comment->id,
+                "title" => $comment->title,
+                "body" => $comment->body,
+                "rating" => $comment->rating,
+                "likes" => $comment->likes,
+                "image" => $comment->commentable->image,
+                "created_at" => $comment->created_at,
+                "user" => $comment->users->name,
+            ];
+        }*/
+
+        return $response;
     }
 
     public function commentLike($comment_id)
@@ -142,10 +165,10 @@ class CommentsRestController extends Controller
     {
         $exist = DB::table("comments")
             ->select("*")
-            ->where("movies_id", $request->movie)
+            ->where("commentable_id", $request->movie)
+            ->where("commentable_type", "App\Models\Movies")
             ->where("users_id", $request->user)
             ->count();
-
 
         if ($exist) {
             return $response = [
@@ -157,6 +180,4 @@ class CommentsRestController extends Controller
             ];
         }
     }
-
-
 }

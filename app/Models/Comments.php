@@ -45,6 +45,15 @@ class Comments extends Model
         return $this->morphTo();
     }
 
+    //This if for backpack crud controller
+    public function movies(){
+        return $this->belongsTo(Movies::class);
+    }
+
+    public function lists(){
+        return $this->belongsTo(Lists::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES
