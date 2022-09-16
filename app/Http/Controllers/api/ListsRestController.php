@@ -50,7 +50,7 @@ class ListsRestController extends Controller
             ->withCount("movies")
             ->find($id);
 
-        $response = [
+        return [
             "id" => $list->id,
             "title" => $list->title,
             "description" => $list->description,
@@ -68,8 +68,6 @@ class ListsRestController extends Controller
             //TODO:Return an array of categories inse the movies object
             "movies" => $list->movies,
         ];
-
-        return $response;
     }
 
     public function update(Request $request, $id)

@@ -98,7 +98,7 @@ class CommentsRestController extends Controller
 
     public function recentComments()
     {
-        $comments = DB::table("comments as c")
+        return DB::table("comments as c")
             ->select('m.title as m_title', 'm.release_date as m_release', 'm.image as m_image', 'c.id',
                 'c.commentable_id as movies_id', 'c.users_id', 'c.title', 'c.body', 'c.rating', 'c.moderated', 'c.status', 'c.likes', 'c.created_at', 'c.updated_at', 'u.name as u_name', 'u.profile_image as u_image')
             ->leftJoin('movies as m', 'm.id', '=', 'c.commentable_id')
@@ -107,8 +107,6 @@ class CommentsRestController extends Controller
             ->orderBy("c.updated_at", "DESC")
             ->limit(5)
             ->get();
-
-        return $comments;
     }
 
     public function movieComments($id)
@@ -119,8 +117,7 @@ class CommentsRestController extends Controller
             ->orderBy("comments.updated_at", "DESC")
             ->get();
 
-
-        $response = $comments->map(function ($item) {
+        return $comments->map(function ($item) {
             return [
                 "id" => $item->id,
                 "movie" => $item->commentable->title,
@@ -133,23 +130,6 @@ class CommentsRestController extends Controller
                 "user" => $item->users->name,
             ];
         });
-
-        /*$response = [];
-        foreach ($comments as $comment) {
-            $response[] = [
-                "movie" => $comment->commentable->title,
-                "id" => $comment->id,
-                "title" => $comment->title,
-                "body" => $comment->body,
-                "rating" => $comment->rating,
-                "likes" => $comment->likes,
-                "image" => $comment->commentable->image,
-                "created_at" => $comment->created_at,
-                "user" => $comment->users->name,
-            ];
-        }*/
-
-        return $response;
     }
 
     public function commentLike($comment_id)
@@ -171,11 +151,11 @@ class CommentsRestController extends Controller
             ->count();
 
         if ($exist) {
-            return $response = [
+            return [
                 "status" => 1,
             ];
         } else {
-            return $response = [
+            return [
                 "status" => 0,
             ];
         }
