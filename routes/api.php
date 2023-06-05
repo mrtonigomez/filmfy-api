@@ -42,7 +42,6 @@ Route::prefix('v1')->group(function () {
     });
 });
 
-
 Route::apiResource("movies",MoviesRestController::class);
 Route::get("only-all-movies",[MoviesRestController::class, "onlyAllMovies"]);
 Route::get("movies-actor/{id}", [MoviesRestController::class, "moviesActor"]);

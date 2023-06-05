@@ -40,14 +40,7 @@ class UsersSeeder extends Seeder
             ],
         ];
 
-        foreach ($users as $user) {
-            User::create([
-                "name" => $user['name'],
-                "email" => $user['email'],
-                "role" => $user['role'],
-                "password" => $user['password'],
-            ]);
-        }
+        DB::table("users")->insert($users);
 
         Schema::enableForeignKeyConstraints();
     }

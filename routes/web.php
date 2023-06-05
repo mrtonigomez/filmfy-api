@@ -19,4 +19,8 @@ Route::get('/', function () {
 
 Route::get('/test', [\App\Http\Controllers\Controller::class, "testing"]);
 
+Route::get('/optimize-images', [\App\Http\Controllers\Admin\OptimizeImageController::class, "index"]);
+Route::post('image-upload', [\App\Http\Controllers\Admin\OptimizeImageController::class, 'store'])->name('upload');
+Route::get('/change-poli', [\App\Http\Controllers\Controller::class, "changePoli"]);
+
 

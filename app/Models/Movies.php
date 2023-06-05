@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class Movies extends Model
 {
@@ -37,93 +36,45 @@ class Movies extends Model
     |--------------------------------------------------------------------------
     */
 
-    public static function returnExtraInformation($id) {
 
-        $categories = [];
-        $actors = [];
-        $directors = [];
-        $writters = [];
-        $comments = [];
-        $likes = 0;
-
-        $categoriesObject = Movies::find($id)->category;
-        foreach ($categoriesObject as $category) {
-            array_push($categories, $category->name);
-        }
-
-        $actorsObject = Movies::find($id)->entities->where("roles_id", 1);
-
-        foreach ($actorsObject as $actor) {
-            array_push($actors, $actor->name);
-        }
-
-        $directorsObject = Movies::find($id)->entities->where("roles_id", 2);
-
-        foreach ($directorsObject as $director) {
-            array_push($directors, $director->name);
-        }
-
-        $writtersObject = Movies::find($id)->entities->where("roles_id", 3);
-
-        foreach ($writtersObject as $writter) {
-            array_push($writters, $writter->name);
-        }
-
-        $commentsObject = Movies::find($id)->comment;
-
-        foreach ($commentsObject as $comment) {
-            array_push($comments, $comment);
-        }
-
-        $likesObject = Movies::find($id)->likes;
-
-        foreach ($likesObject as $like) {
-            $likes++;
-        }
-
-        $data = [
-            "categories" => $categories,
-            "actors" => $actors,
-            "directors" => $directors,
-            "writters" => $writters,
-            "comments" => $comments,
-            "likes" => $likes
-        ];
-
-        return $data;
-
-    }
-
-    public function category() {
+    public function category()
+    {
         return $this->belongsToMany(Categories::class);
     }
 
-    public function entities() {
+    public function entities()
+    {
         return $this->belongsToMany(Entities::class);
     }
 
     //TODO: Changes required on DB to refactor this
-    public function entitiesActors() {
+    public function entitiesActors()
+    {
         return $this->belongsToMany(Entities::class);
     }
 
-    public function entitiesDirectors() {
+    public function entitiesDirectors()
+    {
         return $this->belongsToMany(Entities::class);
     }
 
-    public function entitiesWritters() {
+    public function entitiesWritters()
+    {
         return $this->belongsToMany(Entities::class);
     }
 
-    public function list(){
+    public function list()
+    {
         return $this->belongsToMany(Lists::class);
     }
 
-    public function comment(){
+    public function comment()
+    {
         return $this->morphMany(Comments::class, "commentable");
     }
 
-    public function likes(){
+    public function likes()
+    {
         return $this->morphMany(Likes::class, "likeable");
     }
 

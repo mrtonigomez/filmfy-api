@@ -22,7 +22,6 @@ class LikesSeeder extends Seeder
         $fiberMovies = new \Fiber(function () {
             return Movies::all();
         });
-
         $fiberMovies->start();
 
         for ($i = 0; $i < 200; $i++) {
@@ -36,8 +35,8 @@ class LikesSeeder extends Seeder
         $fiberLikes = new \Fiber(function () {
             return Likes::all();
         });
-
         $fiberLikes->start();
+
         $movies = $fiberMovies->getReturn();
         $likes = $fiberLikes->getReturn();
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Http\Controllers\Controller;
 use App\Models\Entities;
 use App\Models\Likes;
 use App\Models\Movies;
@@ -9,6 +10,13 @@ use Illuminate\Support\Facades\DB;
 
 class MoviesService
 {
+
+    protected Controller $controller;
+
+    public function __construct(Controller $controller)
+    {
+        $this->controller = $controller;
+    }
 
     public function getAllMoviesData()
     {
@@ -330,4 +338,6 @@ class MoviesService
             ->where("movies_id", "=", $movies_id)
             ->delete();
     }
+
+
 }

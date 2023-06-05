@@ -10,10 +10,13 @@
         "backpack/crud": "^5.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "intervention/image": "^2.7",
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/telescope": "^4.9",
         "laravel/tinker": "^2.5",
+        "rjvandoesburg/laravel-jira-rest-client": "^3.2",
+        "spatie/laravel-image-optimizer": "^1.7",
         "tymon/jwt-auth": "dev-develop"
     },
     "require-dev": {

@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\ItemsRequest;
 use App\Http\Requests\MoviesRequest;
 use App\Http\Services\MoviesService;
-use App\Models\Entities;
-use App\Models\Movies;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
-use http\Env\Request;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Class MoviesCrudController
